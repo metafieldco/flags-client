@@ -16,6 +16,8 @@
 		2166541E2725B32D0008C809 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2166541D2725B32D0008C809 /* ControlView.swift */; };
 		216654212725B3CB0008C809 /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216654202725B3CB0008C809 /* Recorder.swift */; };
 		216654232725BBF50008C809 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216654222725BBF50008C809 /* CameraView.swift */; };
+		21C64E6627283442008DD1AE /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C64E6527283442008DD1AE /* Configuration.swift */; };
+		21C64E6827285635008DD1AE /* Segment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C64E6727285635008DD1AE /* Segment.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		2166541D2725B32D0008C809 /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
 		216654202725B3CB0008C809 /* Recorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
 		216654222725BBF50008C809 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		21C64E6527283442008DD1AE /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		21C64E6727285635008DD1AE /* Segment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Segment.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +100,8 @@
 			isa = PBXGroup;
 			children = (
 				216654202725B3CB0008C809 /* Recorder.swift */,
+				21C64E6527283442008DD1AE /* Configuration.swift */,
+				21C64E6727285635008DD1AE /* Segment.swift */,
 			);
 			path = Recorder;
 			sourceTree = "<group>";
@@ -171,11 +177,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				2166540427259A910008C809 /* PreviewView.swift in Sources */,
+				21C64E6827285635008DD1AE /* Segment.swift in Sources */,
 				216654232725BBF50008C809 /* CameraView.swift in Sources */,
 				2166540227259A910008C809 /* AsyncRecorderApp.swift in Sources */,
 				2166541627259B3C0008C809 /* CameraViewModel.swift in Sources */,
 				2166541E2725B32D0008C809 /* ControlView.swift in Sources */,
 				216654212725B3CB0008C809 /* Recorder.swift in Sources */,
+				21C64E6627283442008DD1AE /* Configuration.swift in Sources */,
 				2166541427259AE10008C809 /* CameraContainerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
