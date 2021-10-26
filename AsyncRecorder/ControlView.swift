@@ -16,7 +16,7 @@ struct ControlView: View {
         VStack{
             Text(recordingStatus)
             HStack{
-                Button(action: { recorder.record(to: $recordingStatus)}, label: { Text ("Record")} )
+                Button(action: { recorder.start() }, label: { Text ("Record")} )
                 Button(action: { recorder.stop() }, label: { Text("Stop recording")} )
             }
         }
