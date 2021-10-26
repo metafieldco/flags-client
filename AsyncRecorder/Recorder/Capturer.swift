@@ -13,6 +13,7 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
     private var videoCaptureOutputDevice: AVCaptureVideoDataOutput
     private var audioCaptureOutputDevice: AVCaptureAudioDataOutput
     private let writer: Writer
+    private var stopped = false
     
     init(writer: Writer) {
         self.writer = writer
@@ -60,10 +61,16 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
     }
     
     func stop(){
+        stopped = true
         captureSession.stopRunning()
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        if stopped {
+            print("stopped so not updating")
+            return
+        }
+        
         switch output {
         case audioCaptureOutputDevice:
             appendSample(writerInput: writer.audioWriterInput, sampleBuffer: sampleBuffer)

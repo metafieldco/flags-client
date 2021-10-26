@@ -13,6 +13,7 @@ class Writer: NSObject, AVAssetWriterDelegate {
     let assetWriter: AVAssetWriter
     let audioWriterInput: AVAssetWriterInput
     let videoWriterInput: AVAssetWriterInput
+    private var playlistState = IndexFileState()
     private var segmentIndex = 0
     private var documentDirectory: URL
     
@@ -57,6 +58,17 @@ class Writer: NSObject, AVAssetWriterDelegate {
                 print(self.assetWriter.error!)
             }
         }
+        
+        let finalPlaylist = generateFullPlaylist(state: playlistState)
+        
+        let indexFileURL = URL(fileURLWithPath: indexFileName, isDirectory: false, relativeTo: documentDirectory)
+        print("writing index file to \(indexFileName)")
+        do {
+            try finalPlaylist.write(to: indexFileURL, atomically: false, encoding: .utf8)
+        } catch {
+            print("error writing final playlist")
+        }
+        
     }
     
     func assetWriter(_ writer: AVAssetWriter, didOutputSegmentData segmentData: Data, segmentType: AVAssetSegmentType, segmentReport: AVAssetSegmentReport?) {
@@ -80,6 +92,8 @@ class Writer: NSObject, AVAssetWriterDelegate {
     private func writeSegment(segment: Segment){
         let segmentFileName = segment.fileName(forPrefix: segmentFileNamePrefix)
         let segmentFileURL = URL(fileURLWithPath: segmentFileName, isDirectory: false, relativeTo: documentDirectory)
+        
+        playlistState = updatePlaylistForSegment(state: playlistState, segment: segment)
 
         print("writing \(segment.data.count) bytes to \(segmentFileName)")
         do {

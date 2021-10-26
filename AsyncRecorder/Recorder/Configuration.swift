@@ -23,7 +23,7 @@ let indexFileName = "prog_index.m3u8"
     audio priming duration.  This may cause audio and video to be out of sync.  You should add a time
     offset to all samples to avoid this situation.
 */
-let startTimeOffset = CMTime(value: 10, timescale: 1)
+let startTimeOffset: CMTime = .zero
 
 let audioCompressionSettings: [String: Any] = [
     AVFormatIDKey: kAudioFormatMPEG4AAC,
