@@ -12,87 +12,108 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
     private var captureSession: AVCaptureSession
     private var videoCaptureOutputDevice: AVCaptureVideoDataOutput
     private var audioCaptureOutputDevice: AVCaptureAudioDataOutput
-    private let writer: Writer
-    private var stopped = false
+    private var offsetTime: CMTime
+    private var writer: Writer
     
-    init(writer: Writer) {
-        self.writer = writer
+    override init() {
         self.captureSession = AVCaptureSession()
         self.videoCaptureOutputDevice = AVCaptureVideoDataOutput()
         self.audioCaptureOutputDevice = AVCaptureAudioDataOutput()
+        self.offsetTime = startTimeOffset
+        self.writer = Writer()
         
         super.init()
     }
     
     func start(){
-        canAccess { authorized in
-            guard authorized else {
-                print("access denied")
-                return
-            }
-            
-            self.captureSession.beginConfiguration()
-            self.captureSession.sessionPreset = .hd1920x1080
-            
-            let screenInput = AVCaptureScreenInput()
-            if !self.captureSession.canAddInput(screenInput) { return }
-            self.captureSession.addInput(screenInput)
-            
-            let audioDevice = AVCaptureDevice.default(.builtInMicrophone, for: .audio, position: .unspecified)
-            guard
-                let audioDeviceInput = try? AVCaptureDeviceInput(device: audioDevice!),
-                self.captureSession.canAddInput(audioDeviceInput)
-                else { return }
-            self.captureSession.addInput(audioDeviceInput)
-            
-            let videoDataOutputQueue = DispatchQueue(label: "VideoDataOutputQueue");
-            self.videoCaptureOutputDevice.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
-            guard self.captureSession.canAddOutput(self.videoCaptureOutputDevice) else { return }
-            self.captureSession.addOutput(self.videoCaptureOutputDevice)
-            
-            let audioDataOutputQueue = DispatchQueue(label: "AudioDataOutputQueue");
-            self.audioCaptureOutputDevice.setSampleBufferDelegate(self, queue: audioDataOutputQueue)
-            guard self.captureSession.canAddOutput(self.audioCaptureOutputDevice) else { return }
-            self.captureSession.addOutput(self.audioCaptureOutputDevice)
-            
-            self.captureSession.commitConfiguration()
-            self.captureSession.startRunning()
-        }
+        self.captureSession.beginConfiguration()
+        self.captureSession.sessionPreset = sessionPreset
+        
+        // Video input - screen
+        let screenInput = AVCaptureScreenInput()
+        if !self.captureSession.canAddInput(screenInput) { return }
+        self.captureSession.addInput(screenInput)
+        
+        // Audio input - internal mic
+        let audioDevice = AVCaptureDevice.default(.builtInMicrophone, for: .audio, position: .unspecified)
+        guard
+            let audioDeviceInput = try? AVCaptureDeviceInput(device: audioDevice!),
+            self.captureSession.canAddInput(audioDeviceInput)
+            else { return }
+        self.captureSession.addInput(audioDeviceInput)
+        
+        self.videoCaptureOutputDevice.alwaysDiscardsLateVideoFrames = true
+        self.videoCaptureOutputDevice.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as String) : kCVPixelFormatType_32BGRA]
+        let videoDataOutputQueue = DispatchQueue(label: "VideoDataOutputQueue");
+        self.videoCaptureOutputDevice.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
+        guard self.captureSession.canAddOutput(self.videoCaptureOutputDevice) else { return }
+        self.captureSession.addOutput(self.videoCaptureOutputDevice)
+        
+        let audioDataOutputQueue = DispatchQueue(label: "AudioDataOutputQueue");
+        self.audioCaptureOutputDevice.setSampleBufferDelegate(self, queue: audioDataOutputQueue)
+        guard self.captureSession.canAddOutput(self.audioCaptureOutputDevice) else { return }
+        self.captureSession.addOutput(self.audioCaptureOutputDevice)
+        
+        self.captureSession.commitConfiguration()
+
+        self.captureSession.startRunning()
     }
     
     func stop(){
-        stopped = true
+        writer.stop()
         captureSession.stopRunning()
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        if stopped {
-            print("stopped so not updating")
-            return
-        }
         
-        switch output {
-        case audioCaptureOutputDevice:
-            appendSample(writerInput: writer.audioWriterInput, sampleBuffer: sampleBuffer)
-        case videoCaptureOutputDevice:
-            appendSample(writerInput: writer.videoWriterInput, sampleBuffer: sampleBuffer)
-        default:
-            print("Skipping sample with unrecognized output type")
-            return
+        let isVideo = output is AVCaptureVideoDataOutput
+        
+        if CMSampleBufferDataIsReady(sampleBuffer){
+            
+            // Immediately after the start, only audio data comes, so start writing after the first video comes.
+            if isVideo && writer.assetWriter.status == .unknown {
+                offsetTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                print("seconds mate:\(offsetTime.seconds)")
+                if offsetTime == .zero {
+                    return
+                }
+                writer.assetWriter.startWriting()
+                writer.assetWriter.startSession(atSourceTime: startTimeOffset)
+            }
+            
+            if writer.assetWriter.status == .failed {
+                print(writer.assetWriter.error!)
+                stop()
+                
+            }else if writer.assetWriter.status == .writing {
+                
+                // Presentation timestamp adjustment (minus offSetTime)
+                print("original: \(CMSampleBufferGetPresentationTimeStamp(sampleBuffer).seconds), isVideo: \(isVideo)")
+                var copyBuffer: CMSampleBuffer?
+                var count: CMItemCount = 1
+                var info = CMSampleTimingInfo()
+                CMSampleBufferGetSampleTimingInfoArray(sampleBuffer, entryCount: count, arrayToFill: &info, entriesNeededOut: &count)
+                info.presentationTimeStamp = CMTimeSubtract(info.presentationTimeStamp, offsetTime)
+                CMSampleBufferCreateCopyWithNewTiming(allocator: kCFAllocatorDefault,
+                                                      sampleBuffer: sampleBuffer,
+                                                      sampleTimingEntryCount: 1,
+                                                      sampleTimingArray: &info,
+                                                      sampleBufferOut: &copyBuffer)
+                if let copyBuffer = copyBuffer, copyBuffer.isValid {
+                    if isVideo, writer.videoWriterInput.isReadyForMoreMediaData {
+                        writer.videoWriterInput.append(copyBuffer)
+                    }else if !isVideo, writer.audioWriterInput.isReadyForMoreMediaData {
+                        writer.audioWriterInput.append(copyBuffer)
+                    }
+                }else{
+                    print("copy buffer not valid")
+                }
+            }
         }
     }
     
-    private func appendSample(writerInput: AVAssetWriterInput, sampleBuffer: CMSampleBuffer) {
-        do {
-            if writerInput.isReadyForMoreMediaData {
-                let offsetTimingSampleBuffer = try sampleBuffer.offsettingTiming(by: startTimeOffset)
-                guard writerInput.append(offsetTimingSampleBuffer) else {
-                    throw writer.assetWriter.error!
-                }
-            }
-        }catch {
-            print(error)
-        }
+    func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        print("Dropped some output! Whatever that means ...")
     }
     
     private func canAccess(withHandler handler: @escaping (Bool) -> Void) {
@@ -118,25 +139,3 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
         }
     }
 }
-
-extension CMSampleBuffer {
-    func offsettingTiming(by offset: CMTime) throws -> CMSampleBuffer {
-        let newSampleTimingInfos: [CMSampleTimingInfo]
-        do {
-            newSampleTimingInfos = try sampleTimingInfos().map {
-                var newSampleTiming = $0
-                newSampleTiming.presentationTimeStamp = $0.presentationTimeStamp + offset
-                if $0.decodeTimeStamp.isValid {
-                    newSampleTiming.decodeTimeStamp = $0.decodeTimeStamp + offset
-                }
-                return newSampleTiming
-            }
-        } catch {
-            newSampleTimingInfos = []
-        }
-        let newSampleBuffer = try CMSampleBuffer(copying: self, withNewTiming: newSampleTimingInfos)
-        try newSampleBuffer.setOutputPresentationTimeStamp(newSampleBuffer.outputPresentationTimeStamp + offset)
-        return newSampleBuffer
-    }
-}
-

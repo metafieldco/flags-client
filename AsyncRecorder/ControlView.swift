@@ -10,14 +10,14 @@ import SwiftUI
 struct ControlView: View {
     
     @State var recordingStatus = ""
-    private let recorder = Recorder()
+    private let capturer = Capturer()
     
     var body: some View {
         VStack{
             Text(recordingStatus)
             HStack{
-                Button(action: { recorder.start() }, label: { Text ("Record")} )
-                Button(action: { recorder.stop() }, label: { Text("Stop recording")} )
+                Button(action: { capturer.start() }, label: { Text ("Record")} )
+                Button(action: { capturer.stop() }, label: { Text("Stop recording")} )
             }
         }
     }

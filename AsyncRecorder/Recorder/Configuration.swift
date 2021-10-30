@@ -12,8 +12,11 @@ import VideoToolbox
 let outputContentType = AVFileType.mp4
 let outputFileTypeProfile = AVFileTypeProfile.mpeg4AppleHLS
 let segmentDuration = 6
+let segmentTimescale = CMTimeScale(6000)
 let segmentFileNamePrefix = "fileSequence"
 let indexFileName = "prog_index.m3u8"
+
+let sessionPreset: AVCaptureSession.Preset = .hd1280x720
 
 /*
     Apple HLS fMP4 does not have an Edit List Box ('elst') in an initialization segment to remove
@@ -23,7 +26,7 @@ let indexFileName = "prog_index.m3u8"
     audio priming duration.  This may cause audio and video to be out of sync.  You should add a time
     offset to all samples to avoid this situation.
 */
-let startTimeOffset: CMTime = .zero
+let startTimeOffset = CMTime.zero
 
 let audioCompressionSettings: [String: Any] = [
     AVFormatIDKey: kAudioFormatMPEG4AAC,
@@ -38,10 +41,6 @@ let videoCompressionSettings: [String: Any] = [
     AVVideoCodecKey: AVVideoCodecType.h264,
     // For simplicity, assume 16:9 aspect ratio.
     // For a production use case, modify this as necessary to match the source content.
-    AVVideoWidthKey: 1920,
-    AVVideoHeightKey: 1080,
-    AVVideoCompressionPropertiesKey: [
-        kVTCompressionPropertyKey_AverageBitRate: 6_000_000,
-        kVTCompressionPropertyKey_ProfileLevel: kVTProfileLevel_H264_High_4_2
-    ]
+    AVVideoWidthKey: 1152,
+    AVVideoHeightKey: 720,
 ]

@@ -7,6 +7,7 @@
 
 import Foundation
 import AVFoundation
+import Combine
 
 class Writer: NSObject, AVAssetWriterDelegate {
     
@@ -26,8 +27,7 @@ class Writer: NSObject, AVAssetWriterDelegate {
         self.videoWriterInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoCompressionSettings)
         audioWriterInput.expectsMediaDataInRealTime = true
         videoWriterInput.expectsMediaDataInRealTime = true
-        assetWriter.add(audioWriterInput)
-        assetWriter.add(videoWriterInput)
+        videoWriterInput.mediaTimeScale = segmentTimescale
         
         // Calculate directory
         guard let directory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor:nil, create:false) else { fatalError() }
@@ -35,16 +35,17 @@ class Writer: NSObject, AVAssetWriterDelegate {
         
         super.init()
         
+        if !assetWriter.canAdd(audioWriterInput) { return }
+        if !assetWriter.canAdd(videoWriterInput) { return }
+        assetWriter.add(audioWriterInput)
+        assetWriter.add(videoWriterInput)
+        
         // Configure the asset writer for writing data in fragmented MPEG-4 format.
+        assetWriter.shouldOptimizeForNetworkUse = true
         assetWriter.outputFileTypeProfile = outputFileTypeProfile
         assetWriter.preferredOutputSegmentInterval = CMTime(seconds: Double(segmentDuration), preferredTimescale: 1)
         assetWriter.initialSegmentStartTime = startTimeOffset
         assetWriter.delegate = self
-    }
-    
-    func start(){
-        guard assetWriter.startWriting() else { return }
-        assetWriter.startSession(atSourceTime: startTimeOffset)
     }
     
     func stop(){
@@ -52,23 +53,19 @@ class Writer: NSObject, AVAssetWriterDelegate {
         videoWriterInput.markAsFinished()
         assetWriter.finishWriting {
             if self.assetWriter.status == .completed {
-                print("wahoo")
+                let finalPlaylist = generateFullPlaylist(state: self.playlistState)
+                let indexFileURL = URL(fileURLWithPath: indexFileName, isDirectory: false, relativeTo: self.documentDirectory)
+                print("writing index file to \(indexFileName)")
+                do {
+                    try finalPlaylist.write(to: indexFileURL, atomically: false, encoding: .utf8)
+                } catch {
+                    print("error writing final playlist")
+                }
             }else {
                 assert(self.assetWriter.status == .failed)
                 print(self.assetWriter.error!)
             }
         }
-        
-        let finalPlaylist = generateFullPlaylist(state: playlistState)
-        
-        let indexFileURL = URL(fileURLWithPath: indexFileName, isDirectory: false, relativeTo: documentDirectory)
-        print("writing index file to \(indexFileName)")
-        do {
-            try finalPlaylist.write(to: indexFileURL, atomically: false, encoding: .utf8)
-        } catch {
-            print("error writing final playlist")
-        }
-        
     }
     
     func assetWriter(_ writer: AVAssetWriter, didOutputSegmentData segmentData: Data, segmentType: AVAssetSegmentType, segmentReport: AVAssetSegmentReport?) {

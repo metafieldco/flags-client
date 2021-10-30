@@ -34,7 +34,6 @@ func updatePlaylistForSegment(state: IndexFileState, segment: Segment) -> IndexF
         */
         let segmentReport = segment.report! // A separable segment will always include a segment report.
         let timingTrackReport = segmentReport.trackReports.first(where: { $0.mediaType == .video })!
-        
         if let previousSegmentInfo = state.previousSegmentInfo {
             let segmentDuration = timingTrackReport.earliestPresentationTimeStamp - previousSegmentInfo.timingTrackReport.earliestPresentationTimeStamp
             
