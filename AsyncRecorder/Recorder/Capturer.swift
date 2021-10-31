@@ -73,7 +73,6 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
             // Immediately after the start, only audio data comes, so start writing after the first video comes.
             if isVideo && writer.assetWriter.status == .unknown {
                 offsetTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-                print("seconds mate:\(offsetTime.seconds)")
                 if offsetTime == .zero {
                     return
                 }
@@ -88,7 +87,6 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
             }else if writer.assetWriter.status == .writing {
                 
                 // Presentation timestamp adjustment (minus offSetTime)
-                print("original: \(CMSampleBufferGetPresentationTimeStamp(sampleBuffer).seconds), isVideo: \(isVideo)")
                 var copyBuffer: CMSampleBuffer?
                 var count: CMItemCount = 1
                 var info = CMSampleTimingInfo()
@@ -114,28 +112,5 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
     
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         print("Dropped some output! Whatever that means ...")
-    }
-    
-    private func canAccess(withHandler handler: @escaping (Bool) -> Void) {
-        switch AVCaptureDevice.authorizationStatus(for: .audio) {
-            case .authorized: // The user has previously granted access to audo.
-                handler(true)
-            
-            case .notDetermined: // The user has not yet been asked for audio access.
-                AVCaptureDevice.requestAccess(for: .audio) { granted in
-                    if granted {
-                        handler(granted)
-                    }
-                }
-            
-            case .denied: // The user has previously denied access.
-                handler(false)
-
-            case .restricted: // The user can't grant access due to restrictions.
-                handler(false)
-            
-            @unknown default:
-                handler(false)
-        }
     }
 }
