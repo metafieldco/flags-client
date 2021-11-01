@@ -10,7 +10,7 @@ import SwiftUI
 struct ControlView: View {
     
     @State private var recordingStatus: RecordingStatus = .Stopped
-    @State private var capturer : Capturer?
+    @State private var capture : Capture?
     
     var body: some View {
         VStack{
@@ -25,7 +25,7 @@ struct ControlView: View {
                 }
             } )
         }.onAppear(perform: {
-            capturer = Capturer(recordingStatus: $recordingStatus)
+            capture = Capture(recordingStatus: $recordingStatus)
         })
     }
     
@@ -35,14 +35,14 @@ struct ControlView: View {
         }
         if recordingStatus == .Stopped {
             do {
-                try capturer?.start()
+                try capture?.start()
                 recordingStatus = .Started
             }catch {
                 print(error)
                 recordingStatus = .Error
             }
         }else {
-            capturer?.stop()
+            capture?.stop()
             recordingStatus = .Stopped
         }
     }

@@ -11,13 +11,13 @@ import Combine
 import AppKit
 import SwiftUI
 
-class Writer: NSObject, AVAssetWriterDelegate {
+class Upload: NSObject, AVAssetWriterDelegate {
     
     let assetWriter: AVAssetWriter
     let audioWriterInput: AVAssetWriterInput
     let videoWriterInput: AVAssetWriterInput
 
-    private var webAppVideoUrl: String?
+    private var webAppVideoUrl: URL?
     
     private let supabase: Supabase
     private let recordingStatus: Binding<RecordingStatus>
@@ -49,7 +49,10 @@ class Writer: NSObject, AVAssetWriterDelegate {
         guard let tmp = Bundle.main.object(forInfoDictionaryKey: "WEB_APP_VIDEO_URL") as? String, !tmp.isEmpty else {
             throw RuntimeError("WEB_APP_VIDEO_URL not found in the environment.")
         }
-        webAppVideoUrl = tmp
+        guard let url = URL(string: tmp) else {
+            throw RuntimeError("WEB_APP_VIDEO_URL not a valid URL")
+        }
+        webAppVideoUrl = url
         
         do {
             try supabase.setup()
@@ -89,7 +92,7 @@ class Writer: NSObject, AVAssetWriterDelegate {
                     return
                 }
                 do {
-                    try self.supabase.uploadFile(uuid: self.folderUUID, filename: indexFileName, data: data, finish: self.redirectOnIndexFileUpload)
+                    try self.supabase.uploadFile(uuid: self.folderUUID, filename: indexFileName, data: data, finish: self.handleIndexFileUpload)
                 }catch {
                     print("Error when uploading playlist file: \(error.localizedDescription). Cleaning up.")
                     relay(self.recordingStatus, newStatus: .Error)
@@ -116,20 +119,11 @@ class Writer: NSObject, AVAssetWriterDelegate {
         let segmentFileName = segment.fileName(forPrefix: segmentFileNamePrefix)
         
         do {
-            try self.supabase.uploadFile(uuid: folderUUID, filename: segmentFileName, data: segment.data) { error in
-                if error != nil {
-                    print("Error when uploading segment: \(error!.localizedDescription). Cleaning up.")
-                    self.stop(true)
-                    relay(self.recordingStatus, newStatus: .Error)
-                    // TODO: check how this affects capture output delegate
-                }
-                print("Uploaded segment \(segmentFileName) to s3")
-            }
+            try self.supabase.uploadFile(uuid: folderUUID, filename: segmentFileName, data: segment.data, finish: handleSegmentUploadResponse)
         }catch{
-            print("Error when uploading segment: \(error.localizedDescription). Cleaning up.")
+            print("Runtime error when uploading segment: \(error.localizedDescription). Cleaning up.")
             self.stop(true)
             relay(self.recordingStatus, newStatus: .Error)
-            // TODO: check how this affects capture output delegate
         }
         
         playlistState = updatePlaylistForSegment(state: playlistState, segment: segment)
@@ -137,15 +131,28 @@ class Writer: NSObject, AVAssetWriterDelegate {
         segmentIndex += 1
     }
     
-    private func redirectOnIndexFileUpload(error: RuntimeError?){
-        if error != nil {
-            print("Error when uploading index file: \(error!.localizedDescription)")
+    private func handleSegmentUploadResponse(result: Result<FileUploadSuccess, FileUploadError>) {
+        switch result {
+        case .success(let resp):
+            print("Successfuly uploaded segment to s3: \(resp.key)")
+        case .failure(let error):
+            print(error.localisedDiscription())
+            self.stop(true)
+            relay(self.recordingStatus, newStatus: .Error)
+        }
+    }
+    
+    private func handleIndexFileUpload(result: Result<FileUploadSuccess, FileUploadError>) {
+        switch result {
+        case .success(let resp):
+            print("Successfuly uploaded index file to s3: \(resp.key). Opening web browser ...")
+            if (webAppVideoUrl != nil) {
+                NSWorkspace.shared.open(webAppVideoUrl!.appendingPathComponent(folderUUID.uuidString))
+            }
+        case .failure(let error):
+            print(error.localisedDiscription())
             relay(recordingStatus, newStatus: .Error)
             supabase.deleteFolder(uuid: folderUUID) // don't need to call stop as we already will have done.
-        }
-        print("Uploaded playlist file to s3")
-        if (webAppVideoUrl != nil), let url = URL(string: webAppVideoUrl!) {
-            NSWorkspace.shared.open(url.appendingPathComponent(folderUUID.uuidString))
         }
     }
 }

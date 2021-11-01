@@ -5,8 +5,8 @@
 	<key>SUPABASE_SERVICE_ROLE_KEY</key>
 	<string>$(SUPABASE_SERVICE_ROLE_KEY)</string>
 	<key>SUPABASE_STORAGE_URL</key>
-	<string>$(SUPABASE_STORAGE_URL)</string>
+	<string>https://${SUPABASE_STORAGE_URL}</string>
 	<key>WEB_APP_VIDEO_URL</key>
-	<string>$(WEB_APP_VIDEO_URL)</string>
+	<string>https://${WEB_APP_VIDEO_URL}</string>
 </dict>
 </plist>

@@ -9,12 +9,12 @@ import Foundation
 import AVFoundation
 import SwiftUI
 
-class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
+class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     private var captureSession: AVCaptureSession
     private var videoCaptureOutputDevice: AVCaptureVideoDataOutput
     private var audioCaptureOutputDevice: AVCaptureAudioDataOutput
     private var offsetTime: CMTime
-    private var writer: Writer
+    private var upload: Upload
     private var recordingStatus: Binding<RecordingStatus> // Used for UI updating in delegate callbacks
     
     init(recordingStatus: Binding<RecordingStatus>) {
@@ -22,7 +22,7 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
         self.videoCaptureOutputDevice = AVCaptureVideoDataOutput()
         self.audioCaptureOutputDevice = AVCaptureAudioDataOutput()
         self.offsetTime = startTimeOffset
-        self.writer = Writer(recordingStatus: recordingStatus)
+        self.upload = Upload(recordingStatus: recordingStatus)
         self.recordingStatus = recordingStatus
         
         super.init()
@@ -31,7 +31,7 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
     func start() throws {
         
         do {
-            try writer.setup()
+            try upload.setup()
         }catch {
             throw error
         }
@@ -74,7 +74,7 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
     }
     
     func stop(_ cleanup: Bool = false){
-        writer.stop(cleanup)
+        upload.stop(cleanup)
         captureSession.stopRunning()
         relay(recordingStatus, newStatus: .Stopped)
     }
@@ -86,22 +86,22 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
         if CMSampleBufferDataIsReady(sampleBuffer){
             
             // Immediately after the start, only audio data comes, so start writing after the first video comes.
-            if isVideo && writer.assetWriter.status == .unknown {
+            if isVideo && upload.assetWriter.status == .unknown {
                 offsetTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
                 if offsetTime == .zero {
                     return // TODO: narrow down why the first sample buffer comes so quickly
                 }
-                writer.assetWriter.startWriting()
-                writer.assetWriter.startSession(atSourceTime: startTimeOffset)
+                upload.assetWriter.startWriting()
+                upload.assetWriter.startSession(atSourceTime: startTimeOffset)
             }
             
             // Catch writer issues - could be an issue with appending to writer inputs
-            if writer.assetWriter.status == .failed {
-                print(writer.assetWriter.error!)
+            if upload.assetWriter.status == .failed {
+                print(upload.assetWriter.error!)
                 relay(recordingStatus, newStatus: .Error)
                 stop(true)
                 
-            }else if writer.assetWriter.status == .writing {
+            }else if upload.assetWriter.status == .writing {
                 
                 // Presentation timestamp adjustment (minus offSetTime)
                 var copyBuffer: CMSampleBuffer?
@@ -115,10 +115,10 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
                                                       sampleTimingArray: &info,
                                                       sampleBufferOut: &copyBuffer)
                 if let copyBuffer = copyBuffer, copyBuffer.isValid {
-                    if isVideo, writer.videoWriterInput.isReadyForMoreMediaData {
-                        writer.videoWriterInput.append(copyBuffer)
-                    }else if !isVideo, writer.audioWriterInput.isReadyForMoreMediaData {
-                        writer.audioWriterInput.append(copyBuffer)
+                    if isVideo, upload.videoWriterInput.isReadyForMoreMediaData {
+                        upload.videoWriterInput.append(copyBuffer)
+                    }else if !isVideo, upload.audioWriterInput.isReadyForMoreMediaData {
+                        upload.audioWriterInput.append(copyBuffer)
                     }
                 }else{
                     print("Copied sample buffer is not valid")
