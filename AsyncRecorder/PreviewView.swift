@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  PreviewView.swift
 //  AsyncRecorder
 //
 //  Created by Archie Edwards on 24/10/2021.

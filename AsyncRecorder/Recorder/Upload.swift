@@ -1,5 +1,5 @@
 //
-//  Write.swift
+//  Upload.swift
 //  AsyncRecorder
 //
 //  Created by Archie Edwards on 26/10/2021.
@@ -25,6 +25,7 @@ class Upload: NSObject, AVAssetWriterDelegate {
     private lazy var playlistState = IndexFileState()
     private lazy var segmentIndex = 0
     private lazy var folderUUID = UUID()
+    private lazy var uploadedFiles = [String]() // keeps track in case we need to fallback and delete from s3
     
     init(recordingStatus: Binding<RecordingStatus>) {
         // The following steps check env vars
@@ -78,8 +79,10 @@ class Upload: NSObject, AVAssetWriterDelegate {
         videoWriterInput.markAsFinished()
         assetWriter.finishWriting {
             if cleanup {
-                // there was an error, cleanup any segments we have streamed to s3
-                self.supabase.deleteFolder(uuid: self.folderUUID)
+                // there was an error, cleanup any segments we have streamed to s3 (wait a sec for s3 to propogate)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                    self.supabase.deleteFolder(uuid: self.folderUUID, body: FileDeleteRequest(prefixes: self.uploadedFiles))
+                }
                 return
             }
             if self.assetWriter.status == .completed {
@@ -88,7 +91,11 @@ class Upload: NSObject, AVAssetWriterDelegate {
                 guard let data = finalPlaylist.data(using: .utf8) else {
                     print("Failed to generate full playlist file. Cleaning up.")
                     relay(self.recordingStatus, newStatus: .Error)
-                    self.supabase.deleteFolder(uuid: self.folderUUID)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                        self.supabase.deleteFolder(uuid: self.folderUUID, body: FileDeleteRequest(prefixes: self.uploadedFiles))
+                    }
+    
                     return
                 }
                 do {
@@ -96,7 +103,10 @@ class Upload: NSObject, AVAssetWriterDelegate {
                 }catch {
                     print("Error when uploading playlist file: \(error.localizedDescription). Cleaning up.")
                     relay(self.recordingStatus, newStatus: .Error)
-                    self.supabase.deleteFolder(uuid: self.folderUUID)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                        self.supabase.deleteFolder(uuid: self.folderUUID, body: FileDeleteRequest(prefixes: self.uploadedFiles))
+                    }
                 }
             }
         }
@@ -131,18 +141,19 @@ class Upload: NSObject, AVAssetWriterDelegate {
         segmentIndex += 1
     }
     
-    private func handleSegmentUploadResponse(result: Result<FileUploadSuccess, FileUploadError>) {
+    private func handleSegmentUploadResponse(result: Result<FileUploadSuccess, SupabaseError>) {
         switch result {
         case .success(let resp):
             print("Successfuly uploaded segment to s3: \(resp.key)")
+            uploadedFiles.append(resp.key)
         case .failure(let error):
-            print(error.localisedDiscription())
+            print(error.localisedDescription())
             self.stop(true)
             relay(self.recordingStatus, newStatus: .Error)
         }
     }
     
-    private func handleIndexFileUpload(result: Result<FileUploadSuccess, FileUploadError>) {
+    private func handleIndexFileUpload(result: Result<FileUploadSuccess, SupabaseError>) {
         switch result {
         case .success(let resp):
             print("Successfuly uploaded index file to s3: \(resp.key). Opening web browser ...")
@@ -150,9 +161,12 @@ class Upload: NSObject, AVAssetWriterDelegate {
                 NSWorkspace.shared.open(webAppVideoUrl!.appendingPathComponent(folderUUID.uuidString))
             }
         case .failure(let error):
-            print(error.localisedDiscription())
+            print(error.localisedDescription())
             relay(recordingStatus, newStatus: .Error)
-            supabase.deleteFolder(uuid: folderUUID) // don't need to call stop as we already will have done.
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                self.supabase.deleteFolder(uuid: self.folderUUID, body: FileDeleteRequest(prefixes: self.uploadedFiles))
+            }
         }
     }
 }

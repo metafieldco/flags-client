@@ -1,5 +1,5 @@
 //
-//  Streamer.swift
+//  Supabase.swift
 //  AsyncRecorder
 //
 //  Created by Archie Edwards on 31/10/2021.
@@ -30,7 +30,7 @@ class Supabase: NSObject {
         supabaseServiceRoleKey = serviceKey
     }
     
-    func uploadFile(uuid: UUID, filename: String, data: Data, finish: @escaping (Result<FileUploadSuccess, FileUploadError>) -> Void) throws {
+    func uploadFile(uuid: UUID, filename: String, data: Data, finish: @escaping (Result<FileUploadSuccess, SupabaseError>) -> Void) throws {
         // create tmp file
         let temporaryFileURL =
         temporaryDirectoryUrl.appendingPathComponent(filename)
@@ -43,7 +43,7 @@ class Supabase: NSObject {
         
         // configure upload request
         guard supabaseStorageUrl != nil else {
-            throw RuntimeError("Supabase storage url is null. This shouldn't ever happen here.")
+            throw RuntimeError("Supabase storage url is nil.")
         }
         let url = supabaseStorageUrl!.appendingPathComponent(uuid.uuidString).appendingPathComponent(filename)
         
@@ -83,7 +83,7 @@ class Supabase: NSObject {
                  }
                  */
                 do {
-                    let errorResponse = try FileUploadError(json: dictionary)
+                    let errorResponse = try SupabaseError(json: dictionary)
                     finish(.failure(errorResponse))
                     return
                 }catch{
@@ -109,8 +109,72 @@ class Supabase: NSObject {
         uploadTask.resume()
     }
     
-    func deleteFolder(uuid: UUID) {
-        // TODO: delete folder from supabase to cleanup
-        print("not implemented.")
+    func deleteFolder(uuid: UUID, body: FileDeleteRequest) {
+        print(body.prefixes)
+        // configure delete request
+        guard supabaseStorageUrl != nil else {
+            print("Supabase storage url is nil")
+            return
+        }
+        var request = URLRequest(url: supabaseStorageUrl!,
+                                 cachePolicy: .reloadIgnoringLocalCacheData,
+                                 timeoutInterval: 10)
+        request.httpMethod = "DELETE"
+        
+        guard supabaseServiceRoleKey != nil else {
+            print("Can't create bearer token as api key is nil")
+            return
+        }
+        request.setValue( "Bearer \(supabaseServiceRoleKey!)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let jsonData = try? JSONEncoder().encode(body)
+        request.httpBody = jsonData
+        
+        let deleteTask = URLSession.shared.dataTask(with: request){ data, response, error in
+            if let error = error {
+                print("Internal server error when deleting folder: \(error)")
+                return
+            }
+            
+            guard let data = data else {
+                print("Bad response from server when deleting folder. No data.")
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                /*
+                 {
+                   "statusCode": "string",
+                   "error": "string",
+                   "message": "string"
+                 }
+                 */
+                guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let dictionary = json as? [String: Any] else {
+                    print("Couldn't cast response to JSON [String: Any] when deleting folder.")
+                    return
+                }
+                do {
+                    let errorResponse = try SupabaseError(json: dictionary)
+                    print(errorResponse.localisedDescription())
+                    return
+                }catch{
+                    print("Couldn't cast data to ErrorResponse: \(error.localizedDescription) Response: \(dictionary)")
+                    return
+                }
+            }
+            
+            // we were successful if the array in the response is the same length as the amount of segment files we sent to be deleted.
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let array = json as? [Any] else {
+                print("Couldn't cast response to Array of structs when deleting folder.")
+                return
+            }
+            if array.count == body.prefixes.count {
+                print("Successfully deleted folder from s3")
+            }else{
+                print("Failed to delete folder from s3. Response length did not match body. Response count: \(array.count), Body count: \(body.prefixes.count)")
+            }
+        }
+        deleteTask.resume()
     }
 }

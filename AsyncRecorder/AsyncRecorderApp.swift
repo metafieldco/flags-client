@@ -16,7 +16,7 @@ struct AsyncRecorderApp: App {
     
     var body: some Scene {
         WindowGroup{
-            ControlView()
+            ControlView().frame(width: 400, height: 100, alignment: .center)
         }
     }
 }

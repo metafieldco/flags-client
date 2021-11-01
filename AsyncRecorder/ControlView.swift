@@ -18,7 +18,7 @@ struct ControlView: View {
                 Text("An unexpected error occured. Try and restart the application.")
             }
             Button(action: trigger, label: {
-                if recordingStatus == .Stopped {
+                if recordingStatus == .Stopped || recordingStatus == .Error {
                     Text("Record")
                 }else{
                     Text("Stop")
