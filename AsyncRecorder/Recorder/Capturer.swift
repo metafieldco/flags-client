@@ -7,6 +7,7 @@
 
 import Foundation
 import AVFoundation
+import SwiftUI
 
 class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     private var captureSession: AVCaptureSession
@@ -14,54 +15,68 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
     private var audioCaptureOutputDevice: AVCaptureAudioDataOutput
     private var offsetTime: CMTime
     private var writer: Writer
+    private var recordingStatus: Binding<RecordingStatus> // Used for UI updating in delegate callbacks
     
-    override init() {
+    init(recordingStatus: Binding<RecordingStatus>) {
         self.captureSession = AVCaptureSession()
         self.videoCaptureOutputDevice = AVCaptureVideoDataOutput()
         self.audioCaptureOutputDevice = AVCaptureAudioDataOutput()
         self.offsetTime = startTimeOffset
-        self.writer = Writer()
+        self.writer = Writer(recordingStatus: recordingStatus)
+        self.recordingStatus = recordingStatus
         
         super.init()
     }
     
-    func start(){
-        self.captureSession.beginConfiguration()
-        self.captureSession.sessionPreset = sessionPreset
+    func start() throws {
+        
+        do {
+            try writer.setup()
+        }catch {
+            throw error
+        }
+        
+        captureSession.beginConfiguration()
+        captureSession.sessionPreset = sessionPreset
         
         // Video input - screen
         let screenInput = AVCaptureScreenInput()
-        if !self.captureSession.canAddInput(screenInput) { return }
-        self.captureSession.addInput(screenInput)
+        if !captureSession.canAddInput(screenInput) { throw RuntimeError("Could not add screen capture input to capture session") }
+        captureSession.addInput(screenInput)
         
         // Audio input - internal mic
         let audioDevice = AVCaptureDevice.default(.builtInMicrophone, for: .audio, position: .unspecified)
         guard
             let audioDeviceInput = try? AVCaptureDeviceInput(device: audioDevice!),
-            self.captureSession.canAddInput(audioDeviceInput)
-            else { return }
-        self.captureSession.addInput(audioDeviceInput)
+            captureSession.canAddInput(audioDeviceInput) else {
+                throw RuntimeError("Could not add audio input to capture session")
+            }
+        captureSession.addInput(audioDeviceInput)
         
-        self.videoCaptureOutputDevice.alwaysDiscardsLateVideoFrames = true
-        self.videoCaptureOutputDevice.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as String) : kCVPixelFormatType_32BGRA]
+        videoCaptureOutputDevice.alwaysDiscardsLateVideoFrames = true
+        videoCaptureOutputDevice.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as String) : kCVPixelFormatType_32BGRA]
         let videoDataOutputQueue = DispatchQueue(label: "VideoDataOutputQueue");
-        self.videoCaptureOutputDevice.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
-        guard self.captureSession.canAddOutput(self.videoCaptureOutputDevice) else { return }
-        self.captureSession.addOutput(self.videoCaptureOutputDevice)
+        videoCaptureOutputDevice.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
+        guard captureSession.canAddOutput(self.videoCaptureOutputDevice) else {
+            throw RuntimeError("Could not add video output to capture session")
+        }
+        captureSession.addOutput(self.videoCaptureOutputDevice)
         
         let audioDataOutputQueue = DispatchQueue(label: "AudioDataOutputQueue");
-        self.audioCaptureOutputDevice.setSampleBufferDelegate(self, queue: audioDataOutputQueue)
-        guard self.captureSession.canAddOutput(self.audioCaptureOutputDevice) else { return }
-        self.captureSession.addOutput(self.audioCaptureOutputDevice)
+        audioCaptureOutputDevice.setSampleBufferDelegate(self, queue: audioDataOutputQueue)
+        guard captureSession.canAddOutput(self.audioCaptureOutputDevice) else {
+            throw RuntimeError("Could not add audio output to capture session")
+        }
+        captureSession.addOutput(self.audioCaptureOutputDevice)
         
-        self.captureSession.commitConfiguration()
-
-        self.captureSession.startRunning()
+        captureSession.commitConfiguration()
+        captureSession.startRunning()
     }
     
-    func stop(){
-        writer.stop()
+    func stop(_ cleanup: Bool = false){
+        writer.stop(cleanup)
         captureSession.stopRunning()
+        relay(recordingStatus, newStatus: .Stopped)
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
@@ -74,15 +89,17 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
             if isVideo && writer.assetWriter.status == .unknown {
                 offsetTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
                 if offsetTime == .zero {
-                    return
+                    return // TODO: narrow down why the first sample buffer comes so quickly
                 }
                 writer.assetWriter.startWriting()
                 writer.assetWriter.startSession(atSourceTime: startTimeOffset)
             }
             
+            // Catch writer issues - could be an issue with appending to writer inputs
             if writer.assetWriter.status == .failed {
                 print(writer.assetWriter.error!)
-                stop()
+                relay(recordingStatus, newStatus: .Error)
+                stop(true)
                 
             }else if writer.assetWriter.status == .writing {
                 
@@ -104,13 +121,17 @@ class Capturer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
                         writer.audioWriterInput.append(copyBuffer)
                     }
                 }else{
-                    print("copy buffer not valid")
+                    print("Copied sample buffer is not valid")
+                    relay(recordingStatus, newStatus: .Error)
+                    stop(true)
                 }
             }
         }
     }
     
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        print("Dropped some output! Whatever that means ...")
+        print("Capturer dropped sample buffer: \(String(describing: sampleBuffer.formatDescription))")
+        relay(recordingStatus, newStatus: .Error)
+        stop(true)
     }
 }

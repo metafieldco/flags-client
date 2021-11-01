@@ -8,17 +8,28 @@
 import Foundation
 import AVFoundation
 import Combine
+import AppKit
+import SwiftUI
 
 class Writer: NSObject, AVAssetWriterDelegate {
     
     let assetWriter: AVAssetWriter
     let audioWriterInput: AVAssetWriterInput
     let videoWriterInput: AVAssetWriterInput
-    private var playlistState = IndexFileState()
-    private var segmentIndex = 0
-    private var documentDirectory: URL
+
+    private var webAppVideoUrl: String?
     
-    override init() {
+    private let supabase: Supabase
+    private let recordingStatus: Binding<RecordingStatus>
+    
+    private lazy var playlistState = IndexFileState()
+    private lazy var segmentIndex = 0
+    private lazy var folderUUID = UUID()
+    
+    init(recordingStatus: Binding<RecordingStatus>) {
+        // The following steps check env vars
+        self.supabase = Supabase()
+        
         // Create the asset writer
         self.assetWriter = AVAssetWriter(contentType: UTType(outputContentType.rawValue)!)
         
@@ -29,14 +40,25 @@ class Writer: NSObject, AVAssetWriterDelegate {
         videoWriterInput.expectsMediaDataInRealTime = true
         videoWriterInput.mediaTimeScale = segmentTimescale
         
-        // Calculate directory
-        guard let directory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor:nil, create:false) else { fatalError() }
-        self.documentDirectory = directory
+        self.recordingStatus = recordingStatus
         
         super.init()
+    }
+    
+    func setup() throws {
+        guard let tmp = Bundle.main.object(forInfoDictionaryKey: "WEB_APP_VIDEO_URL") as? String, !tmp.isEmpty else {
+            throw RuntimeError("WEB_APP_VIDEO_URL not found in the environment.")
+        }
+        webAppVideoUrl = tmp
         
-        if !assetWriter.canAdd(audioWriterInput) { return }
-        if !assetWriter.canAdd(videoWriterInput) { return }
+        do {
+            try supabase.setup()
+        }catch {
+            throw error
+        }
+        
+        if !assetWriter.canAdd(audioWriterInput) { throw RuntimeError("Can't add audio writer input to AssetWriter") }
+        if !assetWriter.canAdd(videoWriterInput) { throw RuntimeError("Can't add video writer input to AssetWriter") }
         assetWriter.add(audioWriterInput)
         assetWriter.add(videoWriterInput)
         
@@ -48,22 +70,31 @@ class Writer: NSObject, AVAssetWriterDelegate {
         assetWriter.delegate = self
     }
     
-    func stop(){
+    func stop(_ cleanup: Bool = false){
         audioWriterInput.markAsFinished()
         videoWriterInput.markAsFinished()
         assetWriter.finishWriting {
+            if cleanup {
+                // there was an error, cleanup any segments we have streamed to s3
+                self.supabase.deleteFolder(uuid: self.folderUUID)
+                return
+            }
             if self.assetWriter.status == .completed {
+                // upload the playlist file + show video in browser
                 let finalPlaylist = generateFullPlaylist(state: self.playlistState)
-                let indexFileURL = URL(fileURLWithPath: indexFileName, isDirectory: false, relativeTo: self.documentDirectory)
-                print("writing index file to \(indexFileName)")
-                do {
-                    try finalPlaylist.write(to: indexFileURL, atomically: false, encoding: .utf8)
-                } catch {
-                    print("error writing final playlist")
+                guard let data = finalPlaylist.data(using: .utf8) else {
+                    print("Failed to generate full playlist file. Cleaning up.")
+                    relay(self.recordingStatus, newStatus: .Error)
+                    self.supabase.deleteFolder(uuid: self.folderUUID)
+                    return
                 }
-            }else {
-                assert(self.assetWriter.status == .failed)
-                print(self.assetWriter.error!)
+                do {
+                    try self.supabase.uploadFile(uuid: self.folderUUID, filename: indexFileName, data: data, finish: self.redirectOnIndexFileUpload)
+                }catch {
+                    print("Error when uploading playlist file: \(error.localizedDescription). Cleaning up.")
+                    relay(self.recordingStatus, newStatus: .Error)
+                    self.supabase.deleteFolder(uuid: self.folderUUID)
+                }
             }
         }
     }
@@ -82,41 +113,39 @@ class Writer: NSObject, AVAssetWriterDelegate {
         }
         
         let segment = Segment(index: segmentIndex, data: segmentData, isInitializationSegment: isInitializationSegment, report: segmentReport)
-        writeSegment(segment: segment)
+        let segmentFileName = segment.fileName(forPrefix: segmentFileNamePrefix)
+        
+        do {
+            try self.supabase.uploadFile(uuid: folderUUID, filename: segmentFileName, data: segment.data) { error in
+                if error != nil {
+                    print("Error when uploading segment: \(error!.localizedDescription). Cleaning up.")
+                    self.stop(true)
+                    relay(self.recordingStatus, newStatus: .Error)
+                    // TODO: check how this affects capture output delegate
+                }
+                print("Uploaded segment \(segmentFileName) to s3")
+            }
+        }catch{
+            print("Error when uploading segment: \(error.localizedDescription). Cleaning up.")
+            self.stop(true)
+            relay(self.recordingStatus, newStatus: .Error)
+            // TODO: check how this affects capture output delegate
+        }
+        
+        playlistState = updatePlaylistForSegment(state: playlistState, segment: segment)
+        
         segmentIndex += 1
     }
     
-    private func writeSegment(segment: Segment){
-        let segmentFileName = segment.fileName(forPrefix: segmentFileNamePrefix)
-        let segmentFileURL = URL(fileURLWithPath: segmentFileName, isDirectory: false, relativeTo: documentDirectory)
-        
-        playlistState = updatePlaylistForSegment(state: playlistState, segment: segment)
-
-        print("writing \(segment.data.count) bytes to \(segmentFileName)")
-        do {
-            try segment.data.write(to: segmentFileURL)
-        }catch {
-            print(error)
+    private func redirectOnIndexFileUpload(error: RuntimeError?){
+        if error != nil {
+            print("Error when uploading index file: \(error!.localizedDescription)")
+            relay(recordingStatus, newStatus: .Error)
+            supabase.deleteFolder(uuid: folderUUID) // don't need to call stop as we already will have done.
         }
-    }
-}
-
-// This is a simple structure that combines the output of AVAssetWriterDelegate with an increasing segment index.
-struct Segment {
-    let index: Int
-    let data: Data
-    let isInitializationSegment: Bool
-    let report: AVAssetSegmentReport?
-}
-
-extension Segment {
-    func fileName(forPrefix prefix: String) -> String {
-        let fileExtension: String
-        if isInitializationSegment {
-            fileExtension = "mp4"
-        } else {
-            fileExtension = "m4s"
+        print("Uploaded playlist file to s3")
+        if (webAppVideoUrl != nil), let url = URL(string: webAppVideoUrl!) {
+            NSWorkspace.shared.open(url.appendingPathComponent(folderUUID.uuidString))
         }
-        return "\(prefix)\(index).\(fileExtension)"
     }
 }
