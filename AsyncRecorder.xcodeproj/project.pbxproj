@@ -7,19 +7,59 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		212269E62732B45E00B39138 /* FinishedPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212269E52732B45E00B39138 /* FinishedPopupView.swift */; };
+		217E70AB2731CF9500F30088 /* Capture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AA2731CF9500F30088 /* Capture.swift */; };
+		217E70AD2731CF9E00F30088 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AC2731CF9E00F30088 /* Upload.swift */; };
+		217E70B02731CFB700F30088 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AF2731CFB700F30088 /* Configuration.swift */; };
+		217E70B22731CFDC00F30088 /* PlaylistGeneration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70B12731CFDC00F30088 /* PlaylistGeneration.swift */; };
+		217E70B42731CFED00F30088 /* Segment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70B32731CFED00F30088 /* Segment.swift */; };
+		217E70B82731D08D00F30088 /* Supabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70B72731D08D00F30088 /* Supabase.swift */; };
+		217E70BA2731D0B700F30088 /* FileDeleteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70B92731D0B700F30088 /* FileDeleteRequest.swift */; };
+		217E70BC2731D0C600F30088 /* FileUploadSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70BB2731D0C600F30088 /* FileUploadSuccess.swift */; };
+		217E70BE2731D0D100F30088 /* SupabaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70BD2731D0D100F30088 /* SupabaseError.swift */; };
+		217E70C12731D11F00F30088 /* RuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70C02731D11F00F30088 /* RuntimeError.swift */; };
+		217E70C32731D19D00F30088 /* RecordingStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70C22731D19D00F30088 /* RecordingStatus.swift */; };
+		217E70C62731DC0000F30088 /* StoppedPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70C52731DC0000F30088 /* StoppedPopupView.swift */; };
+		217E70C82731DC1400F30088 /* ErrorPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70C72731DC1400F30088 /* ErrorPopupView.swift */; };
 		219C521927315BC6007B6B36 /* AsyncRecorderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C521827315BC6007B6B36 /* AsyncRecorderApp.swift */; };
-		219C521B27315BC6007B6B36 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C521A27315BC6007B6B36 /* ContentView.swift */; };
+		219C521B27315BC6007B6B36 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C521A27315BC6007B6B36 /* PopupView.swift */; };
 		219C521D27315BCB007B6B36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 219C521C27315BCB007B6B36 /* Assets.xcassets */; };
 		219C522027315BCB007B6B36 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 219C521F27315BCB007B6B36 /* Preview Assets.xcassets */; };
+		219C522A27316A70007B6B36 /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C522927316A70007B6B36 /* CameraPreviewView.swift */; };
+		219C522C27316AA7007B6B36 /* CameraSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C522B27316AA7007B6B36 /* CameraSession.swift */; };
+		219C522E27316AF5007B6B36 /* CameraContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C522D27316AF5007B6B36 /* CameraContainerView.swift */; };
+		219C523127317670007B6B36 /* CamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C523027317670007B6B36 /* CamManager.swift */; };
+		219C523327319B50007B6B36 /* MicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C523227319B50007B6B36 /* MicManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		212269E52732B45E00B39138 /* FinishedPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishedPopupView.swift; sourceTree = "<group>"; };
+		217E70AA2731CF9500F30088 /* Capture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Capture.swift; sourceTree = "<group>"; };
+		217E70AC2731CF9E00F30088 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
+		217E70AF2731CFB700F30088 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		217E70B12731CFDC00F30088 /* PlaylistGeneration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistGeneration.swift; sourceTree = "<group>"; };
+		217E70B32731CFED00F30088 /* Segment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Segment.swift; sourceTree = "<group>"; };
+		217E70B72731D08D00F30088 /* Supabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supabase.swift; sourceTree = "<group>"; };
+		217E70B92731D0B700F30088 /* FileDeleteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDeleteRequest.swift; sourceTree = "<group>"; };
+		217E70BB2731D0C600F30088 /* FileUploadSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUploadSuccess.swift; sourceTree = "<group>"; };
+		217E70BD2731D0D100F30088 /* SupabaseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseError.swift; sourceTree = "<group>"; };
+		217E70C02731D11F00F30088 /* RuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeError.swift; sourceTree = "<group>"; };
+		217E70C22731D19D00F30088 /* RecordingStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingStatus.swift; sourceTree = "<group>"; };
+		217E70C52731DC0000F30088 /* StoppedPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoppedPopupView.swift; sourceTree = "<group>"; };
+		217E70C72731DC1400F30088 /* ErrorPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPopupView.swift; sourceTree = "<group>"; };
+		217E70C92731EA2100F30088 /* secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.xcconfig; sourceTree = "<group>"; };
 		219C521527315BC6007B6B36 /* AsyncRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AsyncRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		219C521827315BC6007B6B36 /* AsyncRecorderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncRecorderApp.swift; sourceTree = "<group>"; };
-		219C521A27315BC6007B6B36 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		219C521A27315BC6007B6B36 /* PopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupView.swift; sourceTree = "<group>"; };
 		219C521C27315BCB007B6B36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		219C521F27315BCB007B6B36 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		219C522127315BCB007B6B36 /* AsyncRecorder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AsyncRecorder.entitlements; sourceTree = "<group>"; };
+		219C52272731622A007B6B36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		219C522927316A70007B6B36 /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
+		219C522B27316AA7007B6B36 /* CameraSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSession.swift; sourceTree = "<group>"; };
+		219C522D27316AF5007B6B36 /* CameraContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraContainerView.swift; sourceTree = "<group>"; };
+		219C523027317670007B6B36 /* CamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CamManager.swift; sourceTree = "<group>"; };
+		219C523227319B50007B6B36 /* MicManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +73,64 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		217E70A92731CF6800F30088 /* Recorder */ = {
+			isa = PBXGroup;
+			children = (
+				217E70AE2731CFA400F30088 /* Utils */,
+				217E70AA2731CF9500F30088 /* Capture.swift */,
+				217E70AC2731CF9E00F30088 /* Upload.swift */,
+			);
+			path = Recorder;
+			sourceTree = "<group>";
+		};
+		217E70AE2731CFA400F30088 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				217E70AF2731CFB700F30088 /* Configuration.swift */,
+				217E70B12731CFDC00F30088 /* PlaylistGeneration.swift */,
+				217E70B32731CFED00F30088 /* Segment.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		217E70B52731D07200F30088 /* Supabase */ = {
+			isa = PBXGroup;
+			children = (
+				217E70B62731D08100F30088 /* Models */,
+				217E70B72731D08D00F30088 /* Supabase.swift */,
+			);
+			path = Supabase;
+			sourceTree = "<group>";
+		};
+		217E70B62731D08100F30088 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				217E70B92731D0B700F30088 /* FileDeleteRequest.swift */,
+				217E70BB2731D0C600F30088 /* FileUploadSuccess.swift */,
+				217E70BD2731D0D100F30088 /* SupabaseError.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		217E70BF2731D10000F30088 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				217E70C02731D11F00F30088 /* RuntimeError.swift */,
+				217E70C22731D19D00F30088 /* RecordingStatus.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		217E70C42731DBC700F30088 /* Popup */ = {
+			isa = PBXGroup;
+			children = (
+				217E70C52731DC0000F30088 /* StoppedPopupView.swift */,
+				217E70C72731DC1400F30088 /* ErrorPopupView.swift */,
+				212269E52732B45E00B39138 /* FinishedPopupView.swift */,
+			);
+			path = Popup;
+			sourceTree = "<group>";
+		};
 		219C520C27315BC6007B6B36 = {
 			isa = PBXGroup;
 			children = (
@@ -52,11 +150,19 @@
 		219C521727315BC6007B6B36 /* AsyncRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				217E70C42731DBC700F30088 /* Popup */,
+				217E70BF2731D10000F30088 /* Utils */,
+				217E70B52731D07200F30088 /* Supabase */,
+				217E70A92731CF6800F30088 /* Recorder */,
+				219C522F2731763C007B6B36 /* Devices */,
+				219C5228273168A7007B6B36 /* Camera */,
+				219C52272731622A007B6B36 /* Info.plist */,
 				219C521827315BC6007B6B36 /* AsyncRecorderApp.swift */,
-				219C521A27315BC6007B6B36 /* ContentView.swift */,
+				219C521A27315BC6007B6B36 /* PopupView.swift */,
 				219C521C27315BCB007B6B36 /* Assets.xcassets */,
 				219C522127315BCB007B6B36 /* AsyncRecorder.entitlements */,
 				219C521E27315BCB007B6B36 /* Preview Content */,
+				217E70C92731EA2100F30088 /* secrets.xcconfig */,
 			);
 			path = AsyncRecorder;
 			sourceTree = "<group>";
@@ -67,6 +173,25 @@
 				219C521F27315BCB007B6B36 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		219C5228273168A7007B6B36 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				219C522927316A70007B6B36 /* CameraPreviewView.swift */,
+				219C522B27316AA7007B6B36 /* CameraSession.swift */,
+				219C522D27316AF5007B6B36 /* CameraContainerView.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		219C522F2731763C007B6B36 /* Devices */ = {
+			isa = PBXGroup;
+			children = (
+				219C523027317670007B6B36 /* CamManager.swift */,
+				219C523227319B50007B6B36 /* MicManager.swift */,
+			);
+			path = Devices;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,8 +264,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				219C521B27315BC6007B6B36 /* ContentView.swift in Sources */,
+				217E70BC2731D0C600F30088 /* FileUploadSuccess.swift in Sources */,
+				219C521B27315BC6007B6B36 /* PopupView.swift in Sources */,
+				217E70B42731CFED00F30088 /* Segment.swift in Sources */,
+				217E70C12731D11F00F30088 /* RuntimeError.swift in Sources */,
+				217E70BE2731D0D100F30088 /* SupabaseError.swift in Sources */,
+				217E70C32731D19D00F30088 /* RecordingStatus.swift in Sources */,
+				219C522C27316AA7007B6B36 /* CameraSession.swift in Sources */,
 				219C521927315BC6007B6B36 /* AsyncRecorderApp.swift in Sources */,
+				217E70C62731DC0000F30088 /* StoppedPopupView.swift in Sources */,
+				217E70AB2731CF9500F30088 /* Capture.swift in Sources */,
+				217E70B22731CFDC00F30088 /* PlaylistGeneration.swift in Sources */,
+				217E70B82731D08D00F30088 /* Supabase.swift in Sources */,
+				219C523127317670007B6B36 /* CamManager.swift in Sources */,
+				217E70BA2731D0B700F30088 /* FileDeleteRequest.swift in Sources */,
+				217E70AD2731CF9E00F30088 /* Upload.swift in Sources */,
+				212269E62732B45E00B39138 /* FinishedPopupView.swift in Sources */,
+				219C523327319B50007B6B36 /* MicManager.swift in Sources */,
+				217E70C82731DC1400F30088 /* ErrorPopupView.swift in Sources */,
+				219C522E27316AF5007B6B36 /* CameraContainerView.swift in Sources */,
+				219C522A27316A70007B6B36 /* CameraPreviewView.swift in Sources */,
+				217E70B02731CFB700F30088 /* Configuration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +293,7 @@
 /* Begin XCBuildConfiguration section */
 		219C522227315BCB007B6B36 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 217E70C92731EA2100F30088 /* secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -210,6 +355,7 @@
 		};
 		219C522327315BCB007B6B36 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 217E70C92731EA2100F30088 /* secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -276,7 +422,10 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AsyncRecorder/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires camera access to include the camera view in recordings.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires microphone access to include audio in recordings.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -304,7 +453,10 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AsyncRecorder/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires camera access to include the camera view in recordings.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires microphone access to include audio in recordings.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
