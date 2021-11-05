@@ -20,19 +20,8 @@ struct StoppedPopupView: View {
             Text("Recorder Control Panel").font(.headline)
             
             VStack(spacing: 8){
-                Toggle(isOn: $camManager.enabled, label: {
-                    Text("Camera")
-                    Spacer()
-                })
-                    .frame(maxWidth: .infinity)
-                    .toggleStyle(SwitchToggleStyle(tint: .blue))
-                
-                Toggle(isOn: $mic.enabled, label: {
-                    Text("Microphone")
-                    Spacer()
-                })
-                    .frame(maxWidth: .infinity)
-                    .toggleStyle(SwitchToggleStyle(tint: .blue))
+                DeviceToggle(enabled: $camManager.enabled, device: "Camera")
+                DeviceToggle(enabled: $mic.enabled, device: "Microphone")
             }
             
             Button(action: startRecording, label: {

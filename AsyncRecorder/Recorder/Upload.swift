@@ -167,6 +167,20 @@ class Upload: NSObject, AVAssetWriterDelegate {
             DispatchQueue.main.async {
                 self.recordingStatus.state = .finished(self.webAppVideoUrl!.appendingPathComponent(self.folderUUID).absoluteString)
             }
+            
+            do {
+                try supabase.insertVideoRecord(uuid: self.folderUUID) { result in
+                    switch result {
+                    case .success(_):
+                        print("Successfully inserted video record.")
+                    case .failure(let error):
+                        print("Failed to insert video record for video: \(error.localizedDescription)")
+                    }
+                    return
+                }
+            }catch{
+                print("Runtime error when inserting video record for video: \(error.localizedDescription)")
+            }
         case .failure(let error):
             print("Error uploading index file: \(error.localisedDescription())")
             relay(recordingStatus, newStatus: .error)

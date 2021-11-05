@@ -10,6 +10,7 @@ import Foundation
 class Supabase: NSObject {
     
     private var supabaseStorageUrl: URL?
+    private var supabaseTableUrl: URL?
     private var supabaseServiceRoleKey: String?
     
     private lazy var temporaryDirectoryUrl = URL(fileURLWithPath: NSTemporaryDirectory(),
@@ -23,6 +24,14 @@ class Supabase: NSObject {
             throw RuntimeError("SUPABASE_STORAGE_URL not a valid URL")
         }
         supabaseStorageUrl = url
+        
+        guard let tableUrlString = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_TABLE_URL") as? String, !tableUrlString.isEmpty else {
+            throw RuntimeError("SUPABASE_TABLE_URL not found in the environment.")
+        }
+        guard let url = URL(string: tableUrlString) else {
+            throw RuntimeError("SUPABASE_TABLE_URL not a valid URL")
+        }
+        supabaseTableUrl = url
         
         guard let serviceKey = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_SERVICE_ROLE_KEY") as? String, !serviceKey.isEmpty else {
             throw RuntimeError("SUPABASE_SERVICE_ROLE_KEY not found in the environment.")
@@ -75,13 +84,6 @@ class Supabase: NSObject {
             }
             
             guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
-                /*
-                 {
-                   "statusCode": "string",
-                   "error": "string",
-                   "message": "string"
-                 }
-                 */
                 do {
                     let errorResponse = try SupabaseError(json: dictionary)
                     finish(.failure(errorResponse))
@@ -92,11 +94,6 @@ class Supabase: NSObject {
                 }
             }
             
-            /*
-             {
-               "Key": "string"
-             }
-             */
             do {
                 let successResponse = try FileUploadSuccess(json: dictionary)
                 finish(.success(successResponse))
@@ -110,7 +107,6 @@ class Supabase: NSObject {
     }
     
     func deleteFolder(body: FileDeleteRequest) {
-        print(body.prefixes)
         // configure delete request
         guard supabaseStorageUrl != nil else {
             print("Supabase storage url is nil")
@@ -143,13 +139,6 @@ class Supabase: NSObject {
             }
             
             guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
-                /*
-                 {
-                   "statusCode": "string",
-                   "error": "string",
-                   "message": "string"
-                 }
-                 */
                 guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let dictionary = json as? [String: Any] else {
                     print("Couldn't cast response to JSON [String: Any] when deleting folder.")
                     return
@@ -176,5 +165,58 @@ class Supabase: NSObject {
             }
         }
         deleteTask.resume()
+    }
+    
+    func insertVideoRecord(uuid: String, finish: @escaping (Result<String, SupabaseError>) -> Void) throws {
+        guard supabaseTableUrl != nil else {
+            print("Supabase table url is nil")
+            return
+        }
+        var request = URLRequest(url: supabaseTableUrl!,
+                                 cachePolicy: .reloadIgnoringLocalCacheData,
+                                 timeoutInterval: 10)
+        request.httpMethod = "POST"
+        
+        guard supabaseServiceRoleKey != nil else {
+            print("Can't create bearer token as api key is nil")
+            return
+        }
+        request.setValue( "Bearer \(supabaseServiceRoleKey!)", forHTTPHeaderField: "Authorization")
+        request.setValue(supabaseServiceRoleKey, forHTTPHeaderField: "apikey")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("return=representation", forHTTPHeaderField: "Prefer")
+        
+        let jsonData = try? JSONEncoder().encode(VideoTableInsertRequest(videoID: uuid))
+        request.httpBody = jsonData
+        
+        let insertRecordTask = URLSession.shared.dataTask(with: request){ data, response, error in
+            if let error = error {
+                finish(.failure(.internalServerError(error)))
+                return
+            }
+            
+            guard let data = data else {
+                finish(.failure(.noData))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let dictionary = json as? [String: Any] else {
+                    finish(.failure(.serialization("Couldn't cast data as JSON.")))
+                    return
+                }
+                do {
+                    let errorResponse = try SupabaseError(json: dictionary)
+                    finish(.failure(errorResponse))
+                    return
+                }catch{
+                    finish(.failure(.serialization("Couldn't cast data to ErrorResponse: \(error.localizedDescription) Response: \(dictionary)")))
+                    return
+                }
+            }
+            
+            finish(.success("All good in da hood"))
+        }
+        insertRecordTask.resume()
     }
 }

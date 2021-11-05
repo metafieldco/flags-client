@@ -8,6 +8,8 @@
 	<string>$(SUPABASE_SERVICE_ROLE_KEY)</string>
 	<key>SUPABASE_STORAGE_URL</key>
 	<string>https://${SUPABASE_STORAGE_URL}</string>
+	<key>SUPABASE_TABLE_URL</key>
+	<string>https://${SUPABASE_TABLE_URL}</string>
 	<key>WEB_APP_VIDEO_URL</key>
 	<string>https://${WEB_APP_VIDEO_URL}</string>
 </dict>
