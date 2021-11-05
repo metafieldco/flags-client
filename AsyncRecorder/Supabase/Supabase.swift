@@ -30,7 +30,7 @@ class Supabase: NSObject {
         supabaseServiceRoleKey = serviceKey
     }
     
-    func uploadFile(uuid: UUID, filename: String, data: Data, finish: @escaping (Result<FileUploadSuccess, SupabaseError>) -> Void) throws {
+    func uploadFile(uuid: String, filename: String, data: Data, finish: @escaping (Result<FileUploadSuccess, SupabaseError>) -> Void) throws {
         // create tmp file
         let temporaryFileURL =
         temporaryDirectoryUrl.appendingPathComponent(filename)
@@ -45,7 +45,7 @@ class Supabase: NSObject {
         guard supabaseStorageUrl != nil else {
             throw RuntimeError("Supabase storage url is nil.")
         }
-        let url = supabaseStorageUrl!.appendingPathComponent(uuid.uuidString).appendingPathComponent(filename)
+        let url = supabaseStorageUrl!.appendingPathComponent(uuid).appendingPathComponent(filename)
         
         var request = URLRequest(url: url,
                                  cachePolicy: .reloadIgnoringLocalCacheData,
@@ -109,7 +109,7 @@ class Supabase: NSObject {
         uploadTask.resume()
     }
     
-    func deleteFolder(uuid: UUID, body: FileDeleteRequest) {
+    func deleteFolder(body: FileDeleteRequest) {
         print(body.prefixes)
         // configure delete request
         guard supabaseStorageUrl != nil else {

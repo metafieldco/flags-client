@@ -16,6 +16,17 @@ class CamManager: ObservableObject {
         self.delegate = delegate
     }
     
+    @Published var hovering = false
+    
+    @Published var size: CameraSize = .regular {
+        didSet(old) {
+            if old == size {
+                return
+            }
+            delegate.updateCameraSize(lastSize: old)
+        }
+    }
+    
     @Published var enabled = false {
         didSet {
             if enabled && !isGranted {
@@ -23,22 +34,20 @@ class CamManager: ObservableObject {
                 return
             }
             
-            DispatchQueue.main.async {
-                if self.enabled {
-                    self.delegate.showCameraPreview()
-                }else {
-                    self.delegate.deleteCameraPreview()
-                }
+            if self.enabled {
+                self.delegate.showCameraPreview()
+            }else {
+                self.delegate.deleteCameraPreview()
             }
         }
     }
     
     @Published var isGranted = false {
         didSet{
-            DispatchQueue.main.async {
-                if self.isGranted {
-                    self.delegate.showCameraPreview()
-                }else if self.enabled{
+            if self.isGranted {
+                self.delegate.showCameraPreview()
+            }else if self.enabled{
+                DispatchQueue.main.async {
                     self.enabled = false
                 }
             }

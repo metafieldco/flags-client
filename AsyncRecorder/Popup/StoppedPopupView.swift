@@ -9,7 +9,7 @@ import SwiftUI
 
 struct StoppedPopupView: View {
     
-    @EnvironmentObject var facecam: CamManager
+    @EnvironmentObject var camManager: CamManager
     @EnvironmentObject var mic: MicManager
     @EnvironmentObject var recording: RecordingStatus
     
@@ -19,9 +19,9 @@ struct StoppedPopupView: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Recorder Control Panel").font(.headline)
             
-            VStack(spacing: 8) {
-                Toggle(isOn: $facecam.enabled, label: {
-                    Text("Facecam")
+            VStack(spacing: 8){
+                Toggle(isOn: $camManager.enabled, label: {
+                    Text("Camera")
                     Spacer()
                 })
                     .frame(maxWidth: .infinity)

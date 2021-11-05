@@ -78,32 +78,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         popover.performClose(sender)
     }
     
-    func showCameraPreview(){
-        let camView = CameraPreviewView()
-        
-        let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 240, height: 150),
-            styleMask: [.closable, .resizable],
-            backing: .buffered, defer: false)
-        window.contentView = NSHostingView(rootView: camView)
-        window.isReleasedWhenClosed = false
-        window.setFrameAutosaveName("Async Recorder Facecam")
-        window.makeKeyAndOrderFront(nil)
-        window.level = .floating
-        window.backgroundColor = .clear
-        window.isMovable = true
-        window.isMovableByWindowBackground = true
-        
-        camWindow = window
-    
-    }
-    
-    func deleteCameraPreview(){
-        print("deleting")
-        camWindow?.contentView = nil
-        camWindow?.close()
-    }
-    
     func popoverDidShow(_ notification: Notification) {
         print("Popup open delegate function triggered")
         guard let cm = camManager else{
@@ -122,6 +96,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         }
     }
     
+    func popoverShouldClose(_ popover: NSPopover) -> Bool {
+        guard let hovering = camManager?.hovering, let state = recording?.state, state == .stopped, hovering else {
+            print("close")
+            return true
+        }
+        return false
+    }
+    
     func popoverDidClose(_ notification: Notification) {
         print("Popup close delegate function triggered")
         if recording?.state != .recording {
@@ -137,6 +119,61 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         popupVc.view = NSHostingView(rootView: popupView.environmentObject(micManager!).environmentObject(camManager!).environmentObject(recording!))
         
         popover.contentViewController = popupVc
+    }
+    
+    func showCameraPreview(){
+        guard let camManager = camManager else {
+            return
+        }
+        
+        let camView = CameraPreviewView().environmentObject(camManager)
+    
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: camManager.size.width, height: camManager.size.height),
+            styleMask: [.closable, .resizable],
+            backing: .buffered, defer: false)
+        window.contentView = NSHostingView(rootView: camView)
+        window.isReleasedWhenClosed = false
+        window.setFrameAutosaveName("Async Recorder Camera")
+        window.makeKeyAndOrderFront(nil)
+        window.level = .floating
+        window.backgroundColor = .clear
+        window.isMovable = true
+        window.isMovableByWindowBackground = true
+        
+        camWindow = window
+    
+    }
+    
+    func deleteCameraPreview(){
+        camWindow?.contentView = nil
+        camWindow?.close()
+    }
+    
+    func updateCameraSize(lastSize: CameraSize) {
+        guard let w = camWindow, let camManager = camManager else {
+           return
+        }
+        let size = camManager.size
+        switch size {
+        case .regular, .large:
+            var frame = w.frame
+            frame.size = NSSize(width: size.width, height: size.height)
+            
+            if lastSize == .fullScreen {
+                w.setFrame(frame, display: true)
+            }else{
+                w.setFrame(frame, display: true, animate: true)
+            }
+        case .fullScreen:
+            guard let screen = w.screen ?? NSScreen.main else {
+                return
+            }
+            w.setFrame(screen.frame, display: true)
+        }
+        
+        // Delete cam size in user defaults
+        NSWindow.removeFrame(usingName: w.frameAutosaveName)
     }
 
 }

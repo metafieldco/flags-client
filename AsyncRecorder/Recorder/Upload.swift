@@ -24,7 +24,7 @@ class Upload: NSObject, AVAssetWriterDelegate {
     
     private lazy var playlistState = IndexFileState()
     private lazy var segmentIndex = 0
-    private lazy var folderUUID = UUID()
+    private lazy var folderUUID = UUID().uuidString.lowercased()
     private lazy var uploadedFiles = [String]() // keeps track in case we need to fallback and delete from s3
     
     init(recordingStatus: RecordingStatus) {
@@ -86,7 +86,7 @@ class Upload: NSObject, AVAssetWriterDelegate {
             if cleanup {
                 // there was an error, cleanup any segments we have streamed to s3 (wait a sec for s3 to propogate)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                    self.supabase.deleteFolder(uuid: self.folderUUID, body: FileDeleteRequest(prefixes: self.uploadedFiles))
+                    self.supabase.deleteFolder(body: FileDeleteRequest(prefixes: self.uploadedFiles))
                 }
                 return
             }
@@ -98,7 +98,7 @@ class Upload: NSObject, AVAssetWriterDelegate {
                     relay(self.recordingStatus, newStatus: .error)
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                        self.supabase.deleteFolder(uuid: self.folderUUID, body: FileDeleteRequest(prefixes: self.uploadedFiles))
+                        self.supabase.deleteFolder(body: FileDeleteRequest(prefixes: self.uploadedFiles))
                     }
     
                     return
@@ -110,7 +110,7 @@ class Upload: NSObject, AVAssetWriterDelegate {
                     relay(self.recordingStatus, newStatus: .error)
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                        self.supabase.deleteFolder(uuid: self.folderUUID, body: FileDeleteRequest(prefixes: self.uploadedFiles))
+                        self.supabase.deleteFolder(body: FileDeleteRequest(prefixes: self.uploadedFiles))
                     }
                 }
             }
@@ -165,14 +165,14 @@ class Upload: NSObject, AVAssetWriterDelegate {
         case .success(let resp):
             print("Successfuly uploaded index file to s3: \(resp.key). Opening web browser ...")
             DispatchQueue.main.async {
-                self.recordingStatus.state = .finished(self.webAppVideoUrl!.appendingPathComponent(self.folderUUID.uuidString).absoluteString)
+                self.recordingStatus.state = .finished(self.webAppVideoUrl!.appendingPathComponent(self.folderUUID).absoluteString)
             }
         case .failure(let error):
             print("Error uploading index file: \(error.localisedDescription())")
             relay(recordingStatus, newStatus: .error)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                self.supabase.deleteFolder(uuid: self.folderUUID, body: FileDeleteRequest(prefixes: self.uploadedFiles))
+                self.supabase.deleteFolder(body: FileDeleteRequest(prefixes: self.uploadedFiles))
             }
         }
     }

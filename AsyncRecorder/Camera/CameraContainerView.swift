@@ -30,7 +30,7 @@ final class CameraContainerView: NSViewRepresentable {
 
 class CameraView: NSView {
     
-    var previewLayer: AVCaptureVideoPreviewLayer?
+    var previewLayer: AVCaptureVideoPreviewLayer!
 
     init(captureSession: AVCaptureSession) {
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
@@ -41,11 +41,18 @@ class CameraView: NSView {
 
     func setupLayer() {
 
-        previewLayer?.frame = self.frame
-        previewLayer?.contentsGravity = .resizeAspectFill
-        previewLayer?.videoGravity = .resizeAspectFill
-        previewLayer?.connection?.automaticallyAdjustsVideoMirroring = false
-        layer = previewLayer
+        previewLayer.frame = self.frame
+        previewLayer.contentsGravity = .resizeAspectFill
+        previewLayer.videoGravity = .resizeAspectFill
+        
+        DispatchQueue.main.async {
+            while self.previewLayer.connection == nil {} // takes a sec when we first load in to setup connection
+            if self.previewLayer.connection!.isVideoMirroringSupported {
+                self.previewLayer.connection!.automaticallyAdjustsVideoMirroring = false
+                self.previewLayer.connection!.isVideoMirrored = true
+            }
+            self.layer = self.previewLayer
+        }
     }
 
     required init?(coder: NSCoder) {
