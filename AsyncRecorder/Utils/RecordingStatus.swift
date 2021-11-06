@@ -12,7 +12,7 @@ import SwiftUI
 enum RecordingState: Equatable {
     case stopped // default
     case recording
-    case finished(String)
+    case finished(String, [String], String)
     case error
 }
 

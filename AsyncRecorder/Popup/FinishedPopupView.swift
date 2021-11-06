@@ -9,36 +9,46 @@ import SwiftUI
 
 struct FinishedPopupView: View {
     var url: String
+    var files: [String]
+    var videoID: String
+    
     @EnvironmentObject var recording: RecordingStatus
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16){
+        PopupContainerView{
             HStack(alignment: .center, spacing: 8){
                 Image(systemName: "checkmark.circle").foregroundColor(.green).font(.title)
                 Text("Video successfully uploaded.").font(.headline)
             }
             
-            Button(action: {
-                let pasteboard = NSPasteboard.general
-                pasteboard.declareTypes([.string], owner: nil)
-                pasteboard.setString(url, forType: .string)
-                recording.state = .stopped
-            }, label: {
-                VStack{
-                    Text("Copy URL to clipboard").padding(.vertical, 6)
+            VStack(spacing: 8){
+                ButtonView(text: "Copy to clipboard"){
+                    let pasteboard = NSPasteboard.general
+                    pasteboard.declareTypes([.string], owner: nil)
+                    pasteboard.setString(url, forType: .string)
+                    recording.state = .stopped
+                }.keyboardShortcut("c", modifiers: [.command, .shift])
+                
+                ButtonView(text: "Recycle video", color: .gray){
+                    let supabase = Supabase()
+                    do {
+                        try supabase.setup()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + Supabase.deleteDelay) {
+                            supabase.deleteFolder(body: FileDeleteRequest(prefixes: files))
+                            supabase.deleteVideoRecord(uuid: videoID)
+                        }
+                    }catch{
+                        print("Error when recycling files: \(error.localizedDescription). Not showing to the user.")
+                    }
+                    recording.state = .stopped
                 }
-                .frame(maxWidth: .infinity)
-                .background(Color.blue)
-                .foregroundColor(Color.white)
-                .cornerRadius(4)
-            })
-            .buttonStyle(PlainButtonStyle())
+            }
         }
     }
 }
 
 struct FinishedPopupView_Previews: PreviewProvider {
     static var previews: some View {
-        FinishedPopupView(url: "https://test.com")
+        FinishedPopupView(url: "https://test.com", files: ["hello", "farewell"], videoID: "")
     }
 }

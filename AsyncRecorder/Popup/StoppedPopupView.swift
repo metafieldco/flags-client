@@ -16,7 +16,7 @@ struct StoppedPopupView: View {
     var capture : Capture?
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        PopupContainerView{
             Text("Recorder Control Panel").font(.headline)
             
             VStack(spacing: 8){
@@ -24,16 +24,9 @@ struct StoppedPopupView: View {
                 DeviceToggle(enabled: $mic.enabled, device: "Microphone")
             }
             
-            Button(action: startRecording, label: {
-                VStack{
-                    Text("Start Recording").padding(.vertical, 6)
-                }
-                .frame(maxWidth: .infinity)
-                .background(Color.blue)
-                .foregroundColor(Color.white)
-                .cornerRadius(4)
-            })
-            .buttonStyle(PlainButtonStyle())
+            ButtonView(text: "Start Recording"){
+                startRecording()
+            }
         }
     }
     

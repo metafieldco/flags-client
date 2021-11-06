@@ -16,6 +16,8 @@ class Supabase: NSObject {
     private lazy var temporaryDirectoryUrl = URL(fileURLWithPath: NSTemporaryDirectory(),
                                                 isDirectory: true)
     
+    static let deleteDelay = 5.0
+    
     func setup() throws {
         guard let storageUrlString = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_STORAGE_URL") as? String, !storageUrlString.isEmpty else {
             throw RuntimeError("SUPABASE_STORAGE_URL not found in the environment.")
@@ -218,5 +220,56 @@ class Supabase: NSObject {
             finish(.success("All good in da hood"))
         }
         insertRecordTask.resume()
+    }
+    
+    func deleteVideoRecord(uuid: String) {
+        // configure delete request
+        guard supabaseTableUrl != nil else {
+            print("Supabase table url is nil")
+            return
+        }
+        let queryItems = [URLQueryItem(name: "video_id", value: "eq.\(uuid)")]
+        var urlComps = URLComponents(string: supabaseTableUrl!.absoluteString)
+        urlComps?.queryItems = queryItems
+        var request = URLRequest(url: urlComps!.url!,
+                                 cachePolicy: .reloadIgnoringLocalCacheData,
+                                 timeoutInterval: 10)
+        request.httpMethod = "DELETE"
+        
+        guard supabaseServiceRoleKey != nil else {
+            print("Can't create bearer token as api key is nil")
+            return
+        }
+        request.setValue( "Bearer \(supabaseServiceRoleKey!)", forHTTPHeaderField: "Authorization")
+        request.setValue(supabaseServiceRoleKey, forHTTPHeaderField: "apikey")
+        
+        let deleteTask = URLSession.shared.dataTask(with: request){ data, response, error in
+            if let error = error {
+                print("Internal server error when deleting video record: \(error)")
+                return
+            }
+            
+            guard let data = data else {
+                print("Bad response from server when deleting video record. No data.")
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let dictionary = json as? [String: Any] else {
+                    print("Couldn't cast response to JSON [String: Any] when deleting video record.")
+                    return
+                }
+                do {
+                    let errorResponse = try SupabaseError(json: dictionary)
+                    print(errorResponse.localisedDescription())
+                    return
+                }catch{
+                    print("Couldn't cast data to ErrorResponse: \(error.localizedDescription) Response: \(dictionary)")
+                    return
+                }
+            }
+            print("Successfully deleted video record with video_id: \(uuid)")
+        }
+        deleteTask.resume()
     }
 }
