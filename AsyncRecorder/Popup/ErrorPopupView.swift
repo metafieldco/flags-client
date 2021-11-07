@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ErrorPopupView: View {
     
-    @EnvironmentObject var recording: RecordingStatus
+    @EnvironmentObject var recordingManager: RecordingManager
     
     var body: some View {
         PopupContainerView{
@@ -21,7 +21,7 @@ struct ErrorPopupView: View {
             Text("If the error persists, please contact us.")
             
             ButtonView(text: "OK", color: .gray){
-                recording.state = .stopped
+                recordingManager.state = .stopped
             }
         }
     }

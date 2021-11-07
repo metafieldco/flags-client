@@ -11,7 +11,7 @@ struct FinishedPopupView: View {
     var url: String
     var videoID: String
     
-    @EnvironmentObject var recording: RecordingStatus
+    @EnvironmentObject var recordingManager: RecordingManager
     
     var body: some View {
         PopupContainerView{
@@ -25,7 +25,7 @@ struct FinishedPopupView: View {
                     let pasteboard = NSPasteboard.general
                     pasteboard.declareTypes([.string], owner: nil)
                     pasteboard.setString(url, forType: .string)
-                    recording.state = .stopped
+                    recordingManager.state = .stopped
                 }.keyboardShortcut("c", modifiers: [.command, .shift])
                 
                 ButtonView(text: "Recycle video", color: .gray){
@@ -36,7 +36,7 @@ struct FinishedPopupView: View {
                     }catch{
                         print("Error when recycling files: \(error.localizedDescription). Not showing to the user.")
                     }
-                    recording.state = .stopped
+                    recordingManager.state = .stopped
                 }
             }
         }

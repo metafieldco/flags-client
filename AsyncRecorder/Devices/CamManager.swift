@@ -29,8 +29,8 @@ class CamManager: ObservableObject {
     
     @Published var enabled = false {
         didSet {
-            if enabled && !isGranted {
-                checkAuthorization()
+            if self.enabled && !self.isGranted {
+                self.checkAuthorization()
                 return
             }
             
@@ -47,9 +47,7 @@ class CamManager: ObservableObject {
             if self.isGranted {
                 self.delegate.showCameraPreview()
             }else if self.enabled{
-                DispatchQueue.main.async {
-                    self.enabled = false
-                }
+                self.enabled = false
             }
         }
     }
