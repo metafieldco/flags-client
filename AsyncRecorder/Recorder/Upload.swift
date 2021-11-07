@@ -25,7 +25,6 @@ class Upload: NSObject, AVAssetWriterDelegate {
     private lazy var playlistState = IndexFileState()
     private lazy var segmentIndex = 0
     private lazy var videoUUID = UUID().uuidString.lowercased()
-    private lazy var uploadedFiles = [String]() // keeps track in case we need to fallback and delete from s3
     
     init(recordingStatus: RecordingStatus) {
         // The following steps check env vars
@@ -84,10 +83,7 @@ class Upload: NSObject, AVAssetWriterDelegate {
         
         assetWriter.finishWriting {
             if cleanup {
-                // there was an error, cleanup any segments we have streamed to s3 (wait a sec for s3 to propogate)
-                DispatchQueue.main.asyncAfter(deadline: .now() + Supabase.deleteDelay) {
-                    self.supabase.deleteFolder(body: FileDeleteRequest(prefixes: self.uploadedFiles))
-                }
+                self.supabase.cleanup(uuid: self.videoUUID)
                 return
             }
             if self.assetWriter.status == .completed {
@@ -96,10 +92,7 @@ class Upload: NSObject, AVAssetWriterDelegate {
                 guard let data = finalPlaylist.data(using: .utf8) else {
                     print("Failed to generate full playlist file. Cleaning up.")
                     relay(self.recordingStatus, newStatus: .error)
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + Supabase.deleteDelay) {
-                        self.supabase.deleteFolder(body: FileDeleteRequest(prefixes: self.uploadedFiles))
-                    }
+                    self.supabase.cleanup(uuid: self.videoUUID)
     
                     return
                 }
@@ -108,12 +101,8 @@ class Upload: NSObject, AVAssetWriterDelegate {
                 }catch {
                     print("Error when uploading playlist file: \(error.localizedDescription). Cleaning up.")
                     relay(self.recordingStatus, newStatus: .error)
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + Supabase.deleteDelay) {
-                        self.supabase.deleteFolder(body: FileDeleteRequest(prefixes: self.uploadedFiles))
-                    }
+                    self.supabase.cleanup(uuid: self.videoUUID)
                 }
-                self.uploadedFiles.append("\(self.videoUUID)/\(indexFileName)")
             }
         }
     }
@@ -147,8 +136,6 @@ class Upload: NSObject, AVAssetWriterDelegate {
         playlistState = updatePlaylistForSegment(state: playlistState, segment: segment)
         
         segmentIndex += 1
-        
-        uploadedFiles.append("\(videoUUID)/\(segmentFileName)")
     }
     
     private func handleSegmentUploadResponse(result: Result<FileUploadSuccess, SupabaseError>) {
@@ -167,7 +154,7 @@ class Upload: NSObject, AVAssetWriterDelegate {
         case .success(let resp):
             print("Successfuly uploaded index file to s3: \(resp.key). Well done Archie ...")
             DispatchQueue.main.async {
-                self.recordingStatus.state = .finished(self.webAppVideoUrl!.appendingPathComponent(self.videoUUID).absoluteString, self.uploadedFiles, self.videoUUID)
+                self.recordingStatus.state = .finished(self.webAppVideoUrl!.appendingPathComponent(self.videoUUID).absoluteString, self.videoUUID)
             }
             
             do {
@@ -186,10 +173,7 @@ class Upload: NSObject, AVAssetWriterDelegate {
         case .failure(let error):
             print("Error uploading index file: \(error.localisedDescription())")
             relay(recordingStatus, newStatus: .error)
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + Supabase.deleteDelay) {
-                self.supabase.deleteFolder(body: FileDeleteRequest(prefixes: self.uploadedFiles))
-            }
+            supabase.cleanup(uuid: videoUUID)
         }
     }
 }

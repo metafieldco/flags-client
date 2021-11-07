@@ -9,7 +9,6 @@ import SwiftUI
 
 struct FinishedPopupView: View {
     var url: String
-    var files: [String]
     var videoID: String
     
     @EnvironmentObject var recording: RecordingStatus
@@ -33,10 +32,7 @@ struct FinishedPopupView: View {
                     let supabase = Supabase()
                     do {
                         try supabase.setup()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + Supabase.deleteDelay) {
-                            supabase.deleteFolder(body: FileDeleteRequest(prefixes: files))
-                            supabase.deleteVideoRecord(uuid: videoID)
-                        }
+                        supabase.cleanup(uuid: videoID)
                     }catch{
                         print("Error when recycling files: \(error.localizedDescription). Not showing to the user.")
                     }
@@ -49,6 +45,6 @@ struct FinishedPopupView: View {
 
 struct FinishedPopupView_Previews: PreviewProvider {
     static var previews: some View {
-        FinishedPopupView(url: "https://test.com", files: ["hello", "farewell"], videoID: "")
+        FinishedPopupView(url: "https://test.com", videoID: "")
     }
 }

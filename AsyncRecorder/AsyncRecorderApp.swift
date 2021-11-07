@@ -87,7 +87,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
             return
         }
         switch state {
-        case .finished(_, _, _), .error:
+        case .finished(_, _), .error:
             return
         default:
             if cm.enabled && cm.isGranted {
