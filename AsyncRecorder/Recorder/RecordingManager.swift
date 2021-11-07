@@ -62,8 +62,18 @@ class RecordingManager: ObservableObject {
     }
     
     func start() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                try self.capture.setup()
+            }catch{
+                print(error)
+                self.state = .error
+            }
+        }
+        
         state = .recording
         delegate.showCountdownWindow()
+        
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true){ _ in
             if self.countdown > 1 {
                 self.countdown -= 1
@@ -71,22 +81,15 @@ class RecordingManager: ObservableObject {
             }else {
                 self.timer!.invalidate()
                 self.delegate.deleteCountdownWindow()
-                self.startRecording()
+                DispatchQueue.global(qos: .userInitiated).async {
+                    self.capture.start()
+                }
             }
         }
     }
     
     func stop(){
         capture.stop()
-    }
-    
-    private func startRecording(){
-        do {
-            try capture.start()
-        }catch{
-            print(error)
-            state = .error
-        }
     }
 }
 

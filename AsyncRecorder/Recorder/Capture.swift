@@ -30,8 +30,7 @@ class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapture
         super.init()
     }
     
-    func start() throws {
-        
+    func setup() throws {
         do {
             try upload.setup()
         }catch {
@@ -74,7 +73,9 @@ class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapture
         captureSession.addOutput(self.audioCaptureOutputDevice)
         
         captureSession.commitConfiguration()
-        
+    }
+    
+    func start() {
         captureSession.startRunning()
     }
     
