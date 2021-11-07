@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct PopupView: View {
-    var capture: Capture?
-    @EnvironmentObject var recording: RecordingStatus
+    @EnvironmentObject var recordingManager: RecordingManager
     
     var body: some View {
         VStack(){
-            switch recording.state {
+            switch recordingManager.state {
             case .stopped, .recording:
-                StoppedPopupView(capture: capture)
+                StoppedPopupView()
             case let .finished(url, videoID):
                 FinishedPopupView(url: url, videoID: videoID)
             case .error:
@@ -31,11 +30,5 @@ struct PopupView: View {
         .onDisappear{
             print("Popup view dissapearing.")
         }
-    }
-}
-
-struct PopupView_Previews: PreviewProvider {
-    static var previews: some View {
-        PopupView(capture: nil)
     }
 }

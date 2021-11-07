@@ -11,9 +11,7 @@ struct StoppedPopupView: View {
     
     @EnvironmentObject var camManager: CamManager
     @EnvironmentObject var mic: MicManager
-    @EnvironmentObject var recording: RecordingStatus
-    
-    var capture : Capture?
+    @EnvironmentObject var recordingManager: RecordingManager
     
     var body: some View {
         PopupContainerView{
@@ -25,27 +23,8 @@ struct StoppedPopupView: View {
             }
             
             ButtonView(text: "Start Recording"){
-                startRecording()
+                recordingManager.start()
             }
         }
-    }
-    
-    private func startRecording(){
-        guard let capture = capture else {
-            return
-        }
-        do {
-            recording.state = .recording
-            try capture.start()
-        }catch{
-            print(error)
-            recording.state = .error
-        }
-    }
-}
-
-struct StoppedPopupView_Previews: PreviewProvider {
-    static var previews: some View {
-        StoppedPopupView(capture: nil)
     }
 }

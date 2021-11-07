@@ -15,23 +15,22 @@ class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapture
     private var audioCaptureOutputDevice: AVCaptureAudioDataOutput
     private var offsetTime: CMTime
     private var upload: Upload
-    private var recordingStatus: RecordingStatus
+    private var recordingManager: RecordingManager
     private var micManager: MicManager
     
-    init(recordingStatus: RecordingStatus, micManager: MicManager) {
+    init(recordingManager: RecordingManager, micManager: MicManager) {
         self.captureSession = AVCaptureSession()
         self.videoCaptureOutputDevice = AVCaptureVideoDataOutput()
         self.audioCaptureOutputDevice = AVCaptureAudioDataOutput()
         self.offsetTime = startTimeOffset
-        self.upload = Upload(recordingStatus: recordingStatus)
-        self.recordingStatus = recordingStatus
+        self.upload = Upload(recordingManager: recordingManager)
+        self.recordingManager = recordingManager
         self.micManager = micManager
         
         super.init()
     }
     
-    func start() throws {
-        
+    func setup() throws {
         do {
             try upload.setup()
         }catch {
@@ -74,7 +73,9 @@ class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapture
         captureSession.addOutput(self.audioCaptureOutputDevice)
         
         captureSession.commitConfiguration()
-        
+    }
+    
+    func start() {
         captureSession.startRunning()
     }
     
@@ -102,7 +103,7 @@ class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapture
             // Catch writer issues - could be an issue with appending to writer inputs
             if upload.assetWriter.status == .failed {
                 print(upload.assetWriter.error!)
-                relay(recordingStatus, newStatus: .error)
+                relay(recordingManager, newState: .error)
                 stop(true)
                 
             }else if upload.assetWriter.status == .writing {
@@ -126,7 +127,7 @@ class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapture
                     }
                 }else{
                     print("Copied sample buffer is not valid")
-                    relay(recordingStatus, newStatus: .error)
+                    relay(recordingManager, newState: .error)
                     stop(true)
                 }
             }
@@ -135,7 +136,7 @@ class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapture
     
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         print("Capturer dropped sample buffer: \(String(describing: sampleBuffer.formatDescription))")
-        relay(recordingStatus, newStatus: .error)
+        relay(recordingManager, newState: .error)
         stop(true)
     }
 }

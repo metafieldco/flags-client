@@ -19,13 +19,15 @@ struct AsyncRecorderApp: App {
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
-    var popover = NSPopover()
     var statusBarItem: NSStatusItem!
+    
+    var popover = NSPopover()
     var camWindow: NSWindow?
+    var countdownWindow: NSWindow?
+    
     var micManager: MicManager?
     var camManager: CamManager?
-    var recording: RecordingStatus?
-    var capture: Capture?
+    var recordingManager: RecordingManager?
 
     override class func awakeFromNib() {}
     
@@ -42,12 +44,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         
         micManager = MicManager()
         camManager = CamManager(self)
-        recording = RecordingStatus(self)
-        capture = Capture(recordingStatus: recording!, micManager: micManager!)
+        recordingManager = RecordingManager(micManager: micManager!, delegate: self)
         
         let popupVc = NSViewController()
-        let popupView = PopupView(capture: capture)
-        popupVc.view = NSHostingView(rootView: popupView.environmentObject(micManager!).environmentObject(camManager!).environmentObject(recording!))
+        let popupView = PopupView()
+        popupVc.view = NSHostingView(rootView: popupView.environmentObject(micManager!).environmentObject(camManager!).environmentObject(recordingManager!))
         
         popover.contentViewController = popupVc
         popover.animates = false
@@ -64,8 +65,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     }
 
     func showPopover(_ sender: Any?) {
-        if recording?.state == .recording{
-            capture?.stop()
+        if recordingManager?.state == .recording{
+            recordingManager?.stop()
         }else{
             if let button = statusBarItem?.button {
                 popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
@@ -83,7 +84,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         guard let cm = camManager else{
             return
         }
-        guard let state = recording?.state else {
+        guard let state = recordingManager?.state else {
             return
         }
         switch state {
@@ -97,8 +98,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     }
     
     func popoverShouldClose(_ popover: NSPopover) -> Bool {
-        guard let hovering = camManager?.hovering, let state = recording?.state, state == .stopped, hovering else {
-            print("close")
+        guard let hovering = camManager?.hovering, let state = recordingManager?.state, state == .stopped, hovering else {
             return true
         }
         return false
@@ -106,17 +106,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     
     func popoverDidClose(_ notification: Notification) {
         print("Popup close delegate function triggered")
-        if recording?.state != .recording {
+        if recordingManager?.state != .recording {
             deleteCameraPreview()
         }
     }
     
     func refreshPopup(){
-        capture = Capture(recordingStatus: recording!, micManager: micManager!)
+        recordingManager = RecordingManager(micManager: micManager!, delegate: self)
         
         let popupVc = NSViewController()
-        let popupView = PopupView(capture: capture)
-        popupVc.view = NSHostingView(rootView: popupView.environmentObject(micManager!).environmentObject(camManager!).environmentObject(recording!))
+        let popupView = PopupView()
+        popupVc.view = NSHostingView(rootView: popupView.environmentObject(micManager!).environmentObject(camManager!).environmentObject(recordingManager!))
         
         popover.contentViewController = popupVc
     }
@@ -134,7 +134,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
             backing: .buffered, defer: false)
         window.contentView = NSHostingView(rootView: camView)
         window.isReleasedWhenClosed = false
-        window.setFrameAutosaveName("Async Recorder Camera")
         window.makeKeyAndOrderFront(nil)
         window.level = .floating
         window.backgroundColor = .clear
@@ -175,5 +174,31 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         // Delete cam size in user defaults
         NSWindow.removeFrame(usingName: w.frameAutosaveName)
     }
-
+    
+    func showCountdownWindow() {
+        guard let screen = NSScreen.main, let recordingManager = recordingManager else {
+            return
+        }
+        
+        let countdownView = CountdownView()
+        
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: screen.frame.width, height: screen.frame.height),
+            styleMask: [],
+            backing: .buffered, defer: false)
+        window.contentView = NSHostingView(rootView: countdownView.environmentObject(recordingManager))
+        window.isReleasedWhenClosed = false
+        window.makeKeyAndOrderFront(nil)
+        window.level = .floating
+        window.backgroundColor = .clear
+        window.isMovable = true
+        window.isMovableByWindowBackground = true
+        
+        self.countdownWindow = window
+    }
+    
+    func deleteCountdownWindow() {
+        countdownWindow?.contentView = nil
+        countdownWindow?.close()
+    }
 }
