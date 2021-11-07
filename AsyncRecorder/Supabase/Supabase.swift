@@ -197,7 +197,7 @@ class Supabase: NSObject {
         request.httpBody = jsonData
         
         // make upload request
-        let uploadTask = URLSession.shared.dataTask(with: request) { data, response, error in
+        let listTask = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 finish(.failure(.internalServerError(error)))
                 return
@@ -241,7 +241,7 @@ class Supabase: NSObject {
                 return
             }
         }
-        uploadTask.resume()
+        listTask.resume()
     }
     
     private func deleteFolder(body: FileDeleteRequest) {
