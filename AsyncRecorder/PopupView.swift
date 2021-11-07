@@ -16,8 +16,8 @@ struct PopupView: View {
             switch recording.state {
             case .stopped, .recording:
                 StoppedPopupView(capture: capture)
-            case let .finished(url, files, videoID):
-                FinishedPopupView(url: url, files: files, videoID: videoID)
+            case let .finished(url, videoID):
+                FinishedPopupView(url: url, videoID: videoID)
             case .error:
                 ErrorPopupView()
             }

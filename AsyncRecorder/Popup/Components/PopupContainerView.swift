@@ -19,7 +19,7 @@ struct PopupContainerView<Content>: View where Content: View {
 struct PopupContainerView_Previews: PreviewProvider {
     static var previews: some View {
         PopupContainerView{
-            FinishedPopupView(url: "https://archie.com", files: ["hello"], videoID: "")
+            FinishedPopupView(url: "https://archie.com", videoID: "")
         }
     }
 }

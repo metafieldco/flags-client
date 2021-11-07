@@ -13,11 +13,6 @@ class Supabase: NSObject {
     private var supabaseTableUrl: URL?
     private var supabaseServiceRoleKey: String?
     
-    private lazy var temporaryDirectoryUrl = URL(fileURLWithPath: NSTemporaryDirectory(),
-                                                isDirectory: true)
-    
-    static let deleteDelay = 5.0
-    
     func setup() throws {
         guard let storageUrlString = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_STORAGE_URL") as? String, !storageUrlString.isEmpty else {
             throw RuntimeError("SUPABASE_STORAGE_URL not found in the environment.")
@@ -41,6 +36,27 @@ class Supabase: NSObject {
         supabaseServiceRoleKey = serviceKey
     }
     
+    func cleanup(uuid: String){
+        // give supabase a chance to propogate
+        DispatchQueue.main.asyncAfter(deadline: .now() + deleteDelay){
+            do {
+                // get all files from storage
+                try self.listFolder(uuid: uuid){ result in
+                    switch result {
+                    case .success(let req):
+                        self.deleteFolder(body: req) // ignore any errors here
+                    case .failure(let error):
+                        print("Failed to list folder: \(error.localisedDescription())")
+                    }
+                }
+                // delete record (if it doesn't exist still returns 204)
+                self.deleteVideoRecord(uuid: uuid)
+            }catch{
+                print("RuntimeError when cleaning up: \(error)")
+            }
+        }
+    }
+    
     func uploadFile(uuid: String, filename: String, data: Data, finish: @escaping (Result<FileUploadSuccess, SupabaseError>) -> Void) throws {
         // create tmp file
         let temporaryFileURL =
@@ -56,7 +72,7 @@ class Supabase: NSObject {
         guard supabaseStorageUrl != nil else {
             throw RuntimeError("Supabase storage url is nil.")
         }
-        let url = supabaseStorageUrl!.appendingPathComponent(uuid).appendingPathComponent(filename)
+        let url = supabaseStorageUrl!.appendingPathComponent(bucket).appendingPathComponent(uuid).appendingPathComponent(filename)
         
         var request = URLRequest(url: url,
                                  cachePolicy: .reloadIgnoringLocalCacheData,
@@ -108,13 +124,133 @@ class Supabase: NSObject {
         uploadTask.resume()
     }
     
-    func deleteFolder(body: FileDeleteRequest) {
+    func insertVideoRecord(uuid: String, finish: @escaping (Result<String, SupabaseError>) -> Void) throws {
+        guard supabaseTableUrl != nil else {
+            throw RuntimeError("Supabase table url is nil")
+        }
+        var request = URLRequest(url: supabaseTableUrl!,
+                                 cachePolicy: .reloadIgnoringLocalCacheData,
+                                 timeoutInterval: 10)
+        request.httpMethod = "POST"
+        
+        guard supabaseServiceRoleKey != nil else {
+            throw RuntimeError("Can't create bearer token as api key is nil")
+        }
+        request.setValue( "Bearer \(supabaseServiceRoleKey!)", forHTTPHeaderField: "Authorization")
+        request.setValue(supabaseServiceRoleKey, forHTTPHeaderField: "apikey")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("return=representation", forHTTPHeaderField: "Prefer")
+        
+        let jsonData = try? JSONEncoder().encode(VideoTableInsertRequest(videoID: uuid))
+        request.httpBody = jsonData
+        
+        let insertRecordTask = URLSession.shared.dataTask(with: request){ data, response, error in
+            if let error = error {
+                finish(.failure(.internalServerError(error)))
+                return
+            }
+            
+            guard let data = data else {
+                finish(.failure(.noData))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let dictionary = json as? [String: Any] else {
+                    finish(.failure(.serialization("Couldn't cast data as JSON.")))
+                    return
+                }
+                do {
+                    let errorResponse = try SupabaseError(json: dictionary)
+                    finish(.failure(errorResponse))
+                    return
+                }catch{
+                    finish(.failure(.serialization("Couldn't cast data to ErrorResponse: \(error.localizedDescription) Response: \(dictionary)")))
+                    return
+                }
+            }
+            
+            finish(.success("All good in da hood"))
+        }
+        insertRecordTask.resume()
+    }
+    
+    private func listFolder(uuid: String, finish: @escaping (Result<FileDeleteRequest, SupabaseError>) -> Void) throws {
+        // configure upload request
+        guard supabaseStorageUrl != nil else {
+            throw RuntimeError("Supabase storage url is nil.")
+        }
+        let url = supabaseStorageUrl!.appendingPathComponent(listBucket)
+        
+        var request = URLRequest(url: url,
+                                 cachePolicy: .reloadIgnoringLocalCacheData,
+                                 timeoutInterval: 10)
+        request.httpMethod = "POST"
+        
+        guard supabaseServiceRoleKey != nil else {
+            throw RuntimeError("Can't create bearer token as api key is nil")
+        }
+        request.setValue( "Bearer \(supabaseServiceRoleKey!)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let jsonData = try? JSONEncoder().encode(FileListRequest(prefix: uuid))
+        request.httpBody = jsonData
+        
+        // make upload request
+        let uploadTask = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                finish(.failure(.internalServerError(error)))
+                return
+            }
+            
+            // Response should always have data
+            guard let data = data else {
+                finish(.failure(.noData))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let dictionary = json as? [String: Any] else {
+                    finish(.failure(.serialization("Couldn't cast response to JSON [String: Any] when listing storage folder.")))
+                    return
+                }
+                do {
+                    let errorResponse = try SupabaseError(json: dictionary)
+                    finish(.failure(errorResponse))
+                    return
+                }catch{
+                    finish(.failure(.serialization("Couldn't cast data to ErrorResponse: \(error.localizedDescription) Response: \(dictionary)")))
+                    return
+                }
+            }
+            
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let dictionary = json as? [[String: Any]] else {
+                finish(.failure(.serialization("Couldn't cast data as JSON array")))
+                return
+            }
+            var prefixes = [String]()
+
+            do {
+                for item in dictionary {
+                    let file = try FileListSuccess(json: item)
+                    prefixes.append("\(uuid)/\(file.name)")
+                }
+                finish(.success(FileDeleteRequest(prefixes: prefixes)))
+            }catch{
+                finish(.failure(.serialization("Couldn't cast data to FileListSuccess: \(error.localizedDescription) Response: \(dictionary)")))
+                return
+            }
+        }
+        uploadTask.resume()
+    }
+    
+    private func deleteFolder(body: FileDeleteRequest) {
         // configure delete request
         guard supabaseStorageUrl != nil else {
             print("Supabase storage url is nil")
             return
         }
-        var request = URLRequest(url: supabaseStorageUrl!,
+        var request = URLRequest(url: supabaseStorageUrl!.appendingPathComponent(bucket),
                                  cachePolicy: .reloadIgnoringLocalCacheData,
                                  timeoutInterval: 10)
         request.httpMethod = "DELETE"
@@ -169,60 +305,7 @@ class Supabase: NSObject {
         deleteTask.resume()
     }
     
-    func insertVideoRecord(uuid: String, finish: @escaping (Result<String, SupabaseError>) -> Void) throws {
-        guard supabaseTableUrl != nil else {
-            print("Supabase table url is nil")
-            return
-        }
-        var request = URLRequest(url: supabaseTableUrl!,
-                                 cachePolicy: .reloadIgnoringLocalCacheData,
-                                 timeoutInterval: 10)
-        request.httpMethod = "POST"
-        
-        guard supabaseServiceRoleKey != nil else {
-            print("Can't create bearer token as api key is nil")
-            return
-        }
-        request.setValue( "Bearer \(supabaseServiceRoleKey!)", forHTTPHeaderField: "Authorization")
-        request.setValue(supabaseServiceRoleKey, forHTTPHeaderField: "apikey")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("return=representation", forHTTPHeaderField: "Prefer")
-        
-        let jsonData = try? JSONEncoder().encode(VideoTableInsertRequest(videoID: uuid))
-        request.httpBody = jsonData
-        
-        let insertRecordTask = URLSession.shared.dataTask(with: request){ data, response, error in
-            if let error = error {
-                finish(.failure(.internalServerError(error)))
-                return
-            }
-            
-            guard let data = data else {
-                finish(.failure(.noData))
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
-                guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let dictionary = json as? [String: Any] else {
-                    finish(.failure(.serialization("Couldn't cast data as JSON.")))
-                    return
-                }
-                do {
-                    let errorResponse = try SupabaseError(json: dictionary)
-                    finish(.failure(errorResponse))
-                    return
-                }catch{
-                    finish(.failure(.serialization("Couldn't cast data to ErrorResponse: \(error.localizedDescription) Response: \(dictionary)")))
-                    return
-                }
-            }
-            
-            finish(.success("All good in da hood"))
-        }
-        insertRecordTask.resume()
-    }
-    
-    func deleteVideoRecord(uuid: String) {
+    private func deleteVideoRecord(uuid: String) {
         // configure delete request
         guard supabaseTableUrl != nil else {
             print("Supabase table url is nil")

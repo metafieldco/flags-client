@@ -16,13 +16,13 @@ enum SupabaseError: Error {
     func localisedDescription() -> String {
         switch self {
         case let .internalServerError(error):
-            return "Internal server error from file request: \(error.localizedDescription)"
+            return "Internal server error from file storage request: \(error.localizedDescription)"
         case let .serialization(errorString):
-            return "Serialization runtime error from file request: \(errorString)"
+            return "Serialization runtime error from file storage request: \(errorString)"
         case .noData:
-            return "Bad response from server for file request: No data returned."
+            return "Bad response from server for file storage request: No data returned."
         case let .server(message):
-            return "Server error from file request. Message: \(message)"
+            return "Server error from file storage. Message: \(message)"
         }
     }
 }
