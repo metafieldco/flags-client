@@ -21,7 +21,7 @@ struct AsyncRecorderApp: App {
 class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     var statusBarItem: NSStatusItem!
     
-    var popover = NSPopover()
+    var popoverController: PopoverController?
     var countdownWindowController: CountdownWindowController?
     var camWindowController: CameraWindowController?
     
@@ -45,19 +45,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         micManager = MicManager()
         camManager = CamManager(self)
         recordingManager = RecordingManager(micManager: micManager!, delegate: self)
-        
-        let popupVc = NSViewController()
-        let popupView = PopupView()
-        popupVc.view = NSHostingView(rootView: popupView.environmentObject(micManager!).environmentObject(camManager!).environmentObject(recordingManager!))
-        
-        popover.contentViewController = popupVc
-        popover.animates = false
-        popover.behavior = .transient
-        popover.delegate = self
     }
     
     @objc func togglePopover(_ sender: Any?) {
-        if popover.isShown {
+        if popoverController != nil && popoverController!.isShown {
             closePopover(sender)
         } else {
             showPopover(sender)
@@ -65,60 +56,32 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     }
 
     func showPopover(_ sender: Any?) {
+        if popoverController == nil {
+            guard let micManager = micManager, let camManager = camManager, let recordingManager = recordingManager else {
+                return
+            }
+            popoverController = PopoverController(appDelegate: self, micManager: micManager, camManager: camManager, recordingManager: recordingManager)
+        }
         if recordingManager?.state == .recording{
             recordingManager?.stop()
         }else{
-            if let button = statusBarItem?.button {
-                popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
-                popover.contentViewController?.view.window?.makeKey()
+            guard let button = statusBarItem?.button else {
+                return
             }
+            popoverController?.show(button: button)
         }
     }
 
     func closePopover(_ sender: Any?) {
-        popover.performClose(sender)
+        popoverController?.close()
     }
     
-    func popoverDidShow(_ notification: Notification) {
-        print("Popup open delegate function triggered")
-        guard let cm = camManager else{
+    func refreshPopover(){
+        guard let micManager = micManager else {
             return
         }
-        guard let state = recordingManager?.state else {
-            return
-        }
-        switch state {
-        case .finished(_, _), .error:
-            return
-        default:
-            if cm.enabled && cm.isGranted {
-                showCameraPreview()
-            }
-        }
-    }
-    
-    func popoverShouldClose(_ popover: NSPopover) -> Bool {
-        guard let hovering = camManager?.hovering, let state = recordingManager?.state, state == .stopped, hovering else {
-            return true
-        }
-        return false
-    }
-    
-    func popoverDidClose(_ notification: Notification) {
-        print("Popup close delegate function triggered")
-        if recordingManager?.state != .recording {
-            deleteCameraPreview()
-        }
-    }
-    
-    func refreshPopup(){
-        recordingManager = RecordingManager(micManager: micManager!, delegate: self)
-        
-        let popupVc = NSViewController()
-        let popupView = PopupView()
-        popupVc.view = NSHostingView(rootView: popupView.environmentObject(micManager!).environmentObject(camManager!).environmentObject(recordingManager!))
-        
-        popover.contentViewController = popupVc
+        recordingManager = RecordingManager(micManager: micManager, delegate: self)
+        popoverController?.setup(recordingManager: recordingManager!)
     }
     
     func showCameraPreview(){

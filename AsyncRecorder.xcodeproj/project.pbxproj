@@ -20,6 +20,7 @@
 		212EDCCB27384A0100629D49 /* RecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCCA27384A0100629D49 /* RecordingManager.swift */; };
 		212EDCCE27391C6300629D49 /* CountdownWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCCD27391C6300629D49 /* CountdownWindowController.swift */; };
 		212EDCD027391CE000629D49 /* CameraWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCCF27391CE000629D49 /* CameraWindowController.swift */; };
+		212EDCD22739706A00629D49 /* PopoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCD12739706A00629D49 /* PopoverController.swift */; };
 		217E70AB2731CF9500F30088 /* Capture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AA2731CF9500F30088 /* Capture.swift */; };
 		217E70AD2731CF9E00F30088 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AC2731CF9E00F30088 /* Upload.swift */; };
 		217E70B02731CFB700F30088 /* RecorderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AF2731CFB700F30088 /* RecorderConfiguration.swift */; };
@@ -60,6 +61,7 @@
 		212EDCCA27384A0100629D49 /* RecordingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingManager.swift; sourceTree = "<group>"; };
 		212EDCCD27391C6300629D49 /* CountdownWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownWindowController.swift; sourceTree = "<group>"; };
 		212EDCCF27391CE000629D49 /* CameraWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraWindowController.swift; sourceTree = "<group>"; };
+		212EDCD12739706A00629D49 /* PopoverController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverController.swift; sourceTree = "<group>"; };
 		217E70AA2731CF9500F30088 /* Capture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Capture.swift; sourceTree = "<group>"; };
 		217E70AC2731CF9E00F30088 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		217E70AF2731CFB700F30088 /* RecorderConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderConfiguration.swift; sourceTree = "<group>"; };
@@ -127,13 +129,14 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		212EDCCC27391C2500629D49 /* WindowControllers */ = {
+		212EDCD3273970B100629D49 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				212EDCCD27391C6300629D49 /* CountdownWindowController.swift */,
 				212EDCCF27391CE000629D49 /* CameraWindowController.swift */,
+				212EDCD12739706A00629D49 /* PopoverController.swift */,
 			);
-			path = WindowControllers;
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		217E70A92731CF6800F30088 /* Recorder */ = {
@@ -235,7 +238,7 @@
 		219C521727315BC6007B6B36 /* AsyncRecorder */ = {
 			isa = PBXGroup;
 			children = (
-				212EDCCC27391C2500629D49 /* WindowControllers */,
+				212EDCD3273970B100629D49 /* Controllers */,
 				217E70C42731DBC700F30088 /* Popup */,
 				217E70BF2731D10000F30088 /* Utils */,
 				217E70B52731D07200F30088 /* Supabase */,
@@ -373,6 +376,7 @@
 				217E70AB2731CF9500F30088 /* Capture.swift in Sources */,
 				2182FFA3273401FC005AA7AA /* CameraSize.swift in Sources */,
 				212EDCCB27384A0100629D49 /* RecordingManager.swift in Sources */,
+				212EDCD22739706A00629D49 /* PopoverController.swift in Sources */,
 				217E70B22731CFDC00F30088 /* PlaylistGeneration.swift in Sources */,
 				217E70B82731D08D00F30088 /* Supabase.swift in Sources */,
 				2126548627368B5C00E1BDD4 /* PopupContainerView.swift in Sources */,

@@ -39,7 +39,7 @@ class RecordingManager: ObservableObject {
                 print("Recording status changed to stopped. Closing and refreshing popup view so we can go again. Removing camera.")
                 DispatchQueue.main.async {
                     self.delegate.closePopover(self)
-                    self.delegate.refreshPopup()
+                    self.delegate.refreshPopover()
                 }
             case .finished:
                 print("Recording status changed to finished. Closing camera view and showing popup for copying URL.")
