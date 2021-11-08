@@ -18,6 +18,8 @@
 		2126548F2737F76600E1BDD4 /* FileListSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2126548E2737F76600E1BDD4 /* FileListSuccess.swift */; };
 		212EDCC927383FC100629D49 /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCC827383FC100629D49 /* CountdownView.swift */; };
 		212EDCCB27384A0100629D49 /* RecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCCA27384A0100629D49 /* RecordingManager.swift */; };
+		212EDCCE27391C6300629D49 /* CountdownWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCCD27391C6300629D49 /* CountdownWindowController.swift */; };
+		212EDCD027391CE000629D49 /* CameraWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCCF27391CE000629D49 /* CameraWindowController.swift */; };
 		217E70AB2731CF9500F30088 /* Capture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AA2731CF9500F30088 /* Capture.swift */; };
 		217E70AD2731CF9E00F30088 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AC2731CF9E00F30088 /* Upload.swift */; };
 		217E70B02731CFB700F30088 /* RecorderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AF2731CFB700F30088 /* RecorderConfiguration.swift */; };
@@ -56,6 +58,8 @@
 		2126548E2737F76600E1BDD4 /* FileListSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListSuccess.swift; sourceTree = "<group>"; };
 		212EDCC827383FC100629D49 /* CountdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
 		212EDCCA27384A0100629D49 /* RecordingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingManager.swift; sourceTree = "<group>"; };
+		212EDCCD27391C6300629D49 /* CountdownWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownWindowController.swift; sourceTree = "<group>"; };
+		212EDCCF27391CE000629D49 /* CameraWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraWindowController.swift; sourceTree = "<group>"; };
 		217E70AA2731CF9500F30088 /* Capture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Capture.swift; sourceTree = "<group>"; };
 		217E70AC2731CF9E00F30088 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		217E70AF2731CFB700F30088 /* RecorderConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderConfiguration.swift; sourceTree = "<group>"; };
@@ -121,6 +125,15 @@
 				2126548A2737F43200E1BDD4 /* SupabaseConfiguration.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		212EDCCC27391C2500629D49 /* WindowControllers */ = {
+			isa = PBXGroup;
+			children = (
+				212EDCCD27391C6300629D49 /* CountdownWindowController.swift */,
+				212EDCCF27391CE000629D49 /* CameraWindowController.swift */,
+			);
+			path = WindowControllers;
 			sourceTree = "<group>";
 		};
 		217E70A92731CF6800F30088 /* Recorder */ = {
@@ -222,6 +235,7 @@
 		219C521727315BC6007B6B36 /* AsyncRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				212EDCCC27391C2500629D49 /* WindowControllers */,
 				217E70C42731DBC700F30088 /* Popup */,
 				217E70BF2731D10000F30088 /* Utils */,
 				217E70B52731D07200F30088 /* Supabase */,
@@ -345,9 +359,11 @@
 				219C521B27315BC6007B6B36 /* PopupView.swift in Sources */,
 				217E70B42731CFED00F30088 /* Segment.swift in Sources */,
 				217E70C12731D11F00F30088 /* RuntimeError.swift in Sources */,
+				212EDCCE27391C6300629D49 /* CountdownWindowController.swift in Sources */,
 				217E70BE2731D0D100F30088 /* SupabaseError.swift in Sources */,
 				2126548F2737F76600E1BDD4 /* FileListSuccess.swift in Sources */,
 				2126548B2737F43200E1BDD4 /* SupabaseConfiguration.swift in Sources */,
+				212EDCD027391CE000629D49 /* CameraWindowController.swift in Sources */,
 				21265483273684CD00E1BDD4 /* ButtonView.swift in Sources */,
 				219C522C27316AA7007B6B36 /* CameraSession.swift in Sources */,
 				212654812735A1C900E1BDD4 /* VideoTableInsertRequest.swift in Sources */,

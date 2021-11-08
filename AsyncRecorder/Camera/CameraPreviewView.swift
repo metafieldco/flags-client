@@ -11,7 +11,6 @@ struct CameraPreviewView: View {
     
     @EnvironmentObject var camManager: CamManager
     @State private var showCamSettings = false
-    @State private var done = false
     
     private var session = CameraSession()
 

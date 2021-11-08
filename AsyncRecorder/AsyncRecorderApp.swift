@@ -22,8 +22,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     var statusBarItem: NSStatusItem!
     
     var popover = NSPopover()
-    var camWindow: NSWindow?
     var countdownWindow: NSWindow?
+    var camWindowController: CameraWindowController?
     
     var micManager: MicManager?
     var camManager: CamManager?
@@ -125,54 +125,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         guard let camManager = camManager else {
             return
         }
-        
-        let camView = CameraPreviewView().environmentObject(camManager)
-    
-        let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: camManager.size.width, height: camManager.size.height),
-            styleMask: [.closable, .resizable],
-            backing: .buffered, defer: false)
-        window.contentView = NSHostingView(rootView: camView)
-        window.isReleasedWhenClosed = false
-        window.makeKeyAndOrderFront(nil)
-        window.level = .floating
-        window.backgroundColor = .clear
-        window.isMovable = true
-        window.isMovableByWindowBackground = true
-        
-        camWindow = window
-    
+        camWindowController = CameraWindowController(camManager: camManager)
+        camWindowController!.showWindow(nil)
     }
     
     func deleteCameraPreview(){
-        camWindow?.contentView = nil
-        camWindow?.close()
+        camWindowController?.close()
     }
     
     func updateCameraSize(lastSize: CameraSize) {
-        guard let w = camWindow, let camManager = camManager else {
-           return
-        }
-        let size = camManager.size
-        switch size {
-        case .regular, .large:
-            var frame = w.frame
-            frame.size = NSSize(width: size.width, height: size.height)
-            
-            if lastSize == .fullScreen {
-                w.setFrame(frame, display: true)
-            }else{
-                w.setFrame(frame, display: true, animate: true)
-            }
-        case .fullScreen:
-            guard let screen = w.screen ?? NSScreen.main else {
-                return
-            }
-            w.setFrame(screen.frame, display: true)
-        }
-        
-        // Delete cam size in user defaults
-        NSWindow.removeFrame(usingName: w.frameAutosaveName)
+        camWindowController?.resize(lastSize: lastSize)
     }
     
     func showCountdownWindow() {
