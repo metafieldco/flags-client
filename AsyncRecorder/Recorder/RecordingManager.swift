@@ -77,7 +77,6 @@ class RecordingManager: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true){ _ in
             if self.countdown > 1 {
                 self.countdown -= 1
-                print(self.countdown)
             }else {
                 self.timer!.invalidate()
                 self.delegate.deleteCountdownWindow()
