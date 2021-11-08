@@ -22,7 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     var statusBarItem: NSStatusItem!
     
     var popover = NSPopover()
-    var countdownWindow: NSWindow?
+    var countdownWindowController: CountdownWindowController?
     var camWindowController: CameraWindowController?
     
     var micManager: MicManager?
@@ -141,26 +141,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         guard let screen = NSScreen.main, let recordingManager = recordingManager else {
             return
         }
-        
-        let countdownView = CountdownView()
-        
-        let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: screen.frame.width, height: screen.frame.height),
-            styleMask: [],
-            backing: .buffered, defer: false)
-        window.contentView = NSHostingView(rootView: countdownView.environmentObject(recordingManager))
-        window.isReleasedWhenClosed = false
-        window.makeKeyAndOrderFront(nil)
-        window.level = .floating
-        window.backgroundColor = .clear
-        window.isMovable = true
-        window.isMovableByWindowBackground = true
-        
-        self.countdownWindow = window
+        countdownWindowController = CountdownWindowController(recordingManager: recordingManager, width: screen.frame.width, height: screen.frame.height)
+        countdownWindowController?.showWindow(nil)
     }
     
     func deleteCountdownWindow() {
-        countdownWindow?.contentView = nil
-        countdownWindow?.close()
+        countdownWindowController?.close()
     }
 }
