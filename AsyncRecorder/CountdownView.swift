@@ -19,6 +19,7 @@ struct CountdownView: View {
                 ZStack{
                     Circle()
                         .frame(width: 64, height: 64)
+                        .foregroundColor(.black)
                     Text("\(timer.countdown)")
                         .font(.largeTitle)
                         .foregroundColor(.white)

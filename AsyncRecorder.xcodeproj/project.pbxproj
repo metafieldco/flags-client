@@ -21,6 +21,7 @@
 		212EDCCE27391C6300629D49 /* CountdownWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCCD27391C6300629D49 /* CountdownWindowController.swift */; };
 		212EDCD027391CE000629D49 /* CameraWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCCF27391CE000629D49 /* CameraWindowController.swift */; };
 		212EDCD22739706A00629D49 /* PopoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCD12739706A00629D49 /* PopoverController.swift */; };
+		212EDCD52739A03E00629D49 /* Exec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCD42739A03E00629D49 /* Exec.swift */; };
 		217E70AB2731CF9500F30088 /* Capture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AA2731CF9500F30088 /* Capture.swift */; };
 		217E70AD2731CF9E00F30088 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AC2731CF9E00F30088 /* Upload.swift */; };
 		217E70B02731CFB700F30088 /* RecorderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AF2731CFB700F30088 /* RecorderConfiguration.swift */; };
@@ -62,6 +63,7 @@
 		212EDCCD27391C6300629D49 /* CountdownWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownWindowController.swift; sourceTree = "<group>"; };
 		212EDCCF27391CE000629D49 /* CameraWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraWindowController.swift; sourceTree = "<group>"; };
 		212EDCD12739706A00629D49 /* PopoverController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverController.swift; sourceTree = "<group>"; };
+		212EDCD42739A03E00629D49 /* Exec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exec.swift; sourceTree = "<group>"; };
 		217E70AA2731CF9500F30088 /* Capture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Capture.swift; sourceTree = "<group>"; };
 		217E70AC2731CF9E00F30088 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		217E70AF2731CFB700F30088 /* RecorderConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderConfiguration.swift; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				217E70C02731D11F00F30088 /* RuntimeError.swift */,
+				212EDCD42739A03E00629D49 /* Exec.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 				2126547C2735858D00E1BDD4 /* AnyShape.swift in Sources */,
 				217E70BA2731D0B700F30088 /* FileDeleteRequest.swift in Sources */,
 				2126547F27359E1600E1BDD4 /* DeviceToggle.swift in Sources */,
+				212EDCD52739A03E00629D49 /* Exec.swift in Sources */,
 				217E70AD2731CF9E00F30088 /* Upload.swift in Sources */,
 				2182FFA827353E2E005AA7AA /* CameraSizeButton.swift in Sources */,
 				212269E62732B45E00B39138 /* FinishedPopupView.swift in Sources */,

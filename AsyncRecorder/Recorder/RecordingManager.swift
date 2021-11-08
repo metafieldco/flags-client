@@ -46,6 +46,7 @@ class RecordingManager: ObservableObject {
                 DispatchQueue.main.async {
                     self.delegate.deleteCameraPreview()
                     self.delegate.showPopover(self)
+                    showDesktop()
                 }
                 return
             }
@@ -71,6 +72,8 @@ class RecordingManager: ObservableObject {
             }
         }
         
+        hideDesktop()
+        
         state = .recording
         delegate.showCountdownWindow()
         
@@ -90,6 +93,7 @@ class RecordingManager: ObservableObject {
     func stop(){
         capture.stop()
     }
+
 }
 
 // Updating a SwiftUI state variable from swift
