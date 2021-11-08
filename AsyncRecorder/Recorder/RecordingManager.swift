@@ -46,7 +46,8 @@ class RecordingManager: ObservableObject {
                 DispatchQueue.main.async {
                     self.delegate.deleteCameraPreview()
                     self.delegate.showPopover(self)
-                    showDesktop()
+                    
+                    toggleDesktop(hide: false)
                 }
                 return
             }
@@ -72,7 +73,7 @@ class RecordingManager: ObservableObject {
             }
         }
         
-        hideDesktop()
+        toggleDesktop(hide: true)
         
         state = .recording
         delegate.showCountdownWindow()
