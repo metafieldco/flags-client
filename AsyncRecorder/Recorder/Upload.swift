@@ -97,7 +97,7 @@ class Upload: NSObject, AVAssetWriterDelegate {
                     return
                 }
                 do {
-                    try self.supabase.uploadFile(uuid: self.videoUUID, filename: indexFileName, data: data, finish: self.handleIndexFileUpload)
+                    try self.supabase.uploadFile(bucket: videoBucket, uuid: self.videoUUID, filename: indexFileName, data: data, finish: self.handleIndexFileUpload)
                 }catch {
                     print("Error when uploading playlist file: \(error.localizedDescription). Cleaning up.")
                     relay(self.recordingManager, newState: .error)
@@ -109,8 +109,6 @@ class Upload: NSObject, AVAssetWriterDelegate {
     
     func assetWriter(_ writer: AVAssetWriter, didOutputSegmentData segmentData: Data, segmentType: AVAssetSegmentType, segmentReport: AVAssetSegmentReport?) {
         let isInitializationSegment: Bool
-        
-        print("receieved segment: \(Date().description)")
         
         switch segmentType {
         case .initialization:
@@ -126,7 +124,7 @@ class Upload: NSObject, AVAssetWriterDelegate {
         let segmentFileName = segment.fileName(forPrefix: segmentFileNamePrefix)
         
         do {
-            try self.supabase.uploadFile(uuid: videoUUID, filename: segmentFileName, data: segment.data, finish: handleSegmentUploadResponse)
+            try self.supabase.uploadFile(bucket: videoBucket, uuid: videoUUID, filename: segmentFileName, data: segment.data, finish: handleSegmentUploadResponse)
         }catch{
             print("Runtime error when uploading segment: \(error.localizedDescription). Cleaning up.")
             self.stop(true)
@@ -156,12 +154,23 @@ class Upload: NSObject, AVAssetWriterDelegate {
             relay(self.recordingManager, newState: .finished(self.webAppVideoUrl!.appendingPathComponent(self.videoUUID).absoluteString, self.videoUUID))
             
             do {
+                // TODO: we can probably do this from supabase
                 try supabase.insertVideoRecord(uuid: self.videoUUID) { result in
                     switch result {
                     case .success(_):
                         print("Successfully inserted video record.")
                     case .failure(let error):
                         print("Failed to insert video record for video: \(error.localizedDescription)")
+                    }
+                    return
+                }
+                
+                try supabase.uploadFile(bucket: thumbnailBucket, uuid: self.videoUUID, filename: screenshotFileName, data: nil){ result in
+                    switch result {
+                    case .success(_):
+                        print("Successfully uploaded thumbnail.")
+                    case .failure(let error):
+                        print("Failed to upload thumbnail for video: \(error.localizedDescription)")
                     }
                     return
                 }

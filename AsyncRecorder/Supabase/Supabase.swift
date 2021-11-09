@@ -41,10 +41,11 @@ class Supabase: NSObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + deleteDelay){
             do {
                 // get all files from storage
-                try self.listFolder(uuid: uuid){ result in
+                try self.listFolder(bucket: listVideoBucket, uuid: uuid){ result in
                     switch result {
                     case .success(let req):
-                        self.deleteFolder(body: req) // ignore any errors here
+                        self.deleteFolder(bucket: videoBucket, body: req) // ignore any errors here
+                        self.deleteFolder(bucket: thumbnailBucket, body: FileDeleteRequest(prefixes: ["\(uuid)/\(screenshotFileName)"]))
                     case .failure(let error):
                         print("Failed to list folder: \(error.localisedDescription())")
                     }
@@ -57,15 +58,18 @@ class Supabase: NSObject {
         }
     }
     
-    func uploadFile(uuid: String, filename: String, data: Data, finish: @escaping (Result<FileUploadSuccess, SupabaseError>) -> Void) throws {
-        // create tmp file
+    func uploadFile(bucket: String, uuid: String, filename: String, data: Data?, finish: @escaping (Result<FileUploadSuccess, SupabaseError>) -> Void) throws {
         let temporaryFileURL =
         temporaryDirectoryUrl.appendingPathComponent(filename)
-        do {
-            try data.write(to: temporaryFileURL,
-                           options: .atomic)
-        }catch {
-            throw RuntimeError("Failed to create tmp file with err: \(error)")
+        
+        if data != nil {
+            // create tmp file
+            do {
+                try data!.write(to: temporaryFileURL,
+                               options: .atomic)
+            }catch {
+                throw RuntimeError("Failed to create tmp file with err: \(error)")
+            }
         }
         
         // configure upload request
@@ -175,12 +179,12 @@ class Supabase: NSObject {
         insertRecordTask.resume()
     }
     
-    private func listFolder(uuid: String, finish: @escaping (Result<FileDeleteRequest, SupabaseError>) -> Void) throws {
+    private func listFolder(bucket: String, uuid: String, finish: @escaping (Result<FileDeleteRequest, SupabaseError>) -> Void) throws {
         // configure upload request
         guard supabaseStorageUrl != nil else {
             throw RuntimeError("Supabase storage url is nil.")
         }
-        let url = supabaseStorageUrl!.appendingPathComponent(listBucket)
+        let url = supabaseStorageUrl!.appendingPathComponent(bucket)
         
         var request = URLRequest(url: url,
                                  cachePolicy: .reloadIgnoringLocalCacheData,
@@ -244,7 +248,7 @@ class Supabase: NSObject {
         listTask.resume()
     }
     
-    private func deleteFolder(body: FileDeleteRequest) {
+    private func deleteFolder(bucket: String, body: FileDeleteRequest) {
         // configure delete request
         guard supabaseStorageUrl != nil else {
             print("Supabase storage url is nil")

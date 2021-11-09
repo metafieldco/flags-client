@@ -111,4 +111,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     func deleteCountdownWindow() {
         countdownWindowController?.close()
     }
+    
+    func showPreviewWindow(url: String, videoID: String){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
+            let previewWindowController = PreviewWindowController(url: url, videoID: videoID)
+            previewWindowController.showWindow(nil)
+        }
+    }
 }

@@ -36,20 +36,20 @@ class RecordingManager: ObservableObject {
                     self.delegate.showPopover(self)
                 }
             case .stopped:
-                print("Recording status changed to stopped. Closing and refreshing popup view so we can go again. Removing camera.")
+                // TODO: won't need this case once we change how error's are shown
+                print("Recording status changed to stopped. We can go again.")
                 DispatchQueue.main.async {
                     self.delegate.closePopover(self)
                     self.delegate.refreshPopover()
                 }
-            case .finished:
-                print("Recording status changed to finished. Closing camera view and showing popup for copying URL.")
+            case let .finished(url, videoID):
+                print("Recording status changed to finished. Closing camera view and showing preview view.")
+                self.delegate.showPreviewWindow(url: url, videoID: videoID)
                 DispatchQueue.main.async {
                     self.delegate.deleteCameraPreview()
-                    self.delegate.showPopover(self)
-                    
                     toggleDesktop(hide: false)
+                    self.delegate.refreshPopover()
                 }
-                return
             }
         }
     }
@@ -76,6 +76,7 @@ class RecordingManager: ObservableObject {
         toggleDesktop(hide: true)
         
         state = .recording
+        
         delegate.showCountdownWindow()
         
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true){ _ in

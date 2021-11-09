@@ -13,10 +13,8 @@ struct PopupView: View {
     var body: some View {
         VStack(){
             switch recordingManager.state {
-            case .stopped, .recording:
+            case .stopped, .recording, .finished(_,_):
                 StoppedPopupView()
-            case let .finished(url, videoID):
-                FinishedPopupView(url: url, videoID: videoID)
             case .error:
                 ErrorPopupView()
             }
