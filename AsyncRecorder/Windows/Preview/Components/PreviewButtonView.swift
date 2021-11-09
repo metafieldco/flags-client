@@ -8,11 +8,26 @@
 import SwiftUI
 
 struct PreviewButtonView: View {
+    
+    var url: String
+    var videoID: String
+    
+    @EnvironmentObject var previewManager: PreviewManager
+    
     var body: some View {
         VStack{
             HStack{
                 PreviewImageButton(image: "xmark.bin.fill", action: {
-                    return
+                    let supabase = Supabase()
+                    do {
+                        try supabase.setup()
+                        supabase.cleanup(uuid: videoID)
+                    }catch{
+                        print("Error when recycling files: \(error.localizedDescription) for id: \(videoID). Not showing to the user.")
+                    }
+                    withAnimation{
+                        previewManager.state = .deleted
+                    }
                 })
                 Spacer()
             }.padding()
@@ -21,11 +36,19 @@ struct PreviewButtonView: View {
             
             HStack{
                 PreviewDetailedButton(image: "paintbrush.pointed.fill", text: "Edit"){
-                    print("Editing")
+                    print("Editing") //TODO: open edit window
+                    withAnimation{
+                        previewManager.state = .editing
+                    }
                 }
                 Spacer()
                 PreviewDetailedButton(image: "doc.on.clipboard", text: "URL"){
-                    print("Copy link")
+                    let pasteboard = NSPasteboard.general
+                    pasteboard.declareTypes([.string], owner: nil)
+                    pasteboard.setString(url, forType: .string)
+                    withAnimation{
+                        previewManager.state = .copied
+                    }
                 }
             }.padding()
         }
@@ -34,6 +57,6 @@ struct PreviewButtonView: View {
 
 struct PreviewButtonView_Previews: PreviewProvider {
     static var previews: some View {
-        PreviewButtonView()
+        PreviewButtonView(url: "", videoID: "")
     }
 }

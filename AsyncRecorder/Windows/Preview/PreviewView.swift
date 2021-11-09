@@ -10,14 +10,26 @@ import AVKit
 
 struct PreviewView: View {
     
+    var url: String
+    var videoID: String
+    
     @EnvironmentObject var previewManager: PreviewManager
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         ZStack{
-            PreviewButtonView().zIndex(2)
+            switch previewManager.state {
+            case .copied:
+                PreviewFeedbackView(msg: "Copied link").zIndex(2)
+            case .deleted:
+                PreviewFeedbackView(msg: "Recycled video").zIndex(2)
+            case .editing:
+                PreviewFeedbackView(msg: "Not implemented").zIndex(2)
+            case .none:
+                PreviewButtonView(url: url, videoID: videoID).zIndex(2)
+            }
             
-            if previewManager.isHovering {
+            if previewManager.isHovering || previewManager.state != .none {
                 PreviewHoverView().zIndex(1)
             }
             
@@ -30,39 +42,6 @@ struct PreviewView: View {
 
 struct PreviewView_Previews: PreviewProvider {
     static var previews: some View {
-        PreviewView()
+        PreviewView(url: "", videoID: "")
     }
 }
-
-//struct AVPlayerControllerRepresented : NSViewRepresentable {
-//    var player : AVPlayer
-//
-//    func makeNSView(context: Context) -> AVPlayerView {
-//        let view = AVPlayerView()
-//        view.controlsStyle = .none
-//        view.player = player
-//        return view
-//    }
-//
-//    func updateNSView(_ nsView: AVPlayerView, context: Context) {
-//
-//    }
-//}
-//
-//extension AVPlayerView {
-//
-//    override open func scrollWheel(with event: NSEvent) {
-//        // Disable scrolling that can cause accidental video playback control (seek)
-//        return
-//    }
-//
-//    override open func keyDown(with event: NSEvent) {
-//        // Disable space key (do not pause video playback)
-//
-//        let spaceBarKeyCode = UInt16(49)
-//        if event.keyCode == spaceBarKeyCode {
-//            return
-//        }
-//    }
-//
-//}

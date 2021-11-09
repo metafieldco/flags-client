@@ -9,13 +9,34 @@ import Foundation
 import AppKit
 import SwiftUI
 
+enum PreviewButtonState {
+    case copied
+    case deleted
+    case editing
+    case none
+}
+
 class PreviewManager: ObservableObject {
-    @Published var isHovering = true
+    
+    var controller: PreviewWindowController
+    
+    init(controller: PreviewWindowController) {
+        self.controller = controller
+    }
+    
+    @Published var isHovering = false
+    @Published var state: PreviewButtonState = .none {
+        didSet {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
+                self.controller.close()
+            }
+        }
+    }
 }
 
 class PreviewWindowController: NSWindowController, NSWindowDelegate {
     
-    let previewManager = PreviewManager()
+    var previewManager: PreviewManager?
     let targetWidth = 288
     let targetHeight = 180
     
@@ -27,7 +48,8 @@ class PreviewWindowController: NSWindowController, NSWindowDelegate {
         super.init(window: window)
         window.delegate = self
         
-        let previewView = PreviewView().environmentObject(previewManager)
+        previewManager = PreviewManager(controller: self)
+        let previewView = PreviewView(url: "", videoID: "").environmentObject(previewManager!)
         window.contentView = NSHostingView(rootView: previewView)
 
         // general config
@@ -56,35 +78,37 @@ class PreviewWindowController: NSWindowController, NSWindowDelegate {
     
     override func showWindow(_ sender: Any?) {
         super.showWindow(sender)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
-            withAnimation{
-                self.previewManager.isHovering = false
-            }
-        }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 7.0){
-            guard let window = self.window, let screen = window.screen else {
+            guard let previewManager = self.previewManager, previewManager.state != .none else {
+                self.close()
                 return
             }
-            NSAnimationContext.runAnimationGroup({ context in
-                context.duration = 0.25
-                window.animator().setFrame(NSRect(x: Int(screen.visibleFrame.maxX), y: Int(screen.visibleFrame.minY) + 10, width: self.targetWidth, height: self.targetHeight), display: true, animate: true)
-            }, completionHandler: {
-                self.close()
-            })
         }
+    }
+    
+    override func close() {
+        guard let window = self.window, let screen = window.screen else {
+            super.close()
+            return
+        }
+        NSAnimationContext.runAnimationGroup({ context in
+            context.duration = 0.25
+            window.animator().setFrame(NSRect(x: Int(screen.visibleFrame.maxX), y: Int(screen.visibleFrame.minY) + 10, width: self.targetWidth, height: self.targetHeight), display: true, animate: true)
+        }, completionHandler: {
+            super.close()
+        })
     }
     
     override func mouseEntered(with event: NSEvent) {
         withAnimation{
-            self.previewManager.isHovering = true
+            self.previewManager?.isHovering = true
         }
     }
     
     override func mouseExited(with event: NSEvent) {
         withAnimation{
-            self.previewManager.isHovering = false
+            self.previewManager?.isHovering = false
         }
     }
     
