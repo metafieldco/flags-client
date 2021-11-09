@@ -24,6 +24,10 @@
 		212EDCD52739A03E00629D49 /* InvisibleDesktop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCD42739A03E00629D49 /* InvisibleDesktop.swift */; };
 		212EDCD72739DA2300629D49 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCD62739DA2300629D49 /* PreviewView.swift */; };
 		212EDCD9273A61CF00629D49 /* PreviewWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCD8273A61CF00629D49 /* PreviewWindowController.swift */; };
+		212EDCDB273AA77000629D49 /* BlurEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCDA273AA77000629D49 /* BlurEffect.swift */; };
+		212EDCDF273AA80000629D49 /* PreviewImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCDE273AA80000629D49 /* PreviewImageButton.swift */; };
+		212EDCE1273AA83400629D49 /* PreviewDetailedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCE0273AA83400629D49 /* PreviewDetailedButton.swift */; };
+		212EDCEA273AAB4F00629D49 /* PreviewHoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCE9273AAB4F00629D49 /* PreviewHoverView.swift */; };
 		217E70AB2731CF9500F30088 /* Capture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AA2731CF9500F30088 /* Capture.swift */; };
 		217E70AD2731CF9E00F30088 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AC2731CF9E00F30088 /* Upload.swift */; };
 		217E70B02731CFB700F30088 /* RecorderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AF2731CFB700F30088 /* RecorderConfiguration.swift */; };
@@ -39,6 +43,7 @@
 		2182FFA3273401FC005AA7AA /* CameraSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182FFA2273401FC005AA7AA /* CameraSize.swift */; };
 		2182FFA627353B07005AA7AA /* CameraSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182FFA527353B07005AA7AA /* CameraSettingsView.swift */; };
 		2182FFA827353E2E005AA7AA /* CameraSizeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182FFA727353E2E005AA7AA /* CameraSizeButton.swift */; };
+		219A71DD273ACE3000C5AF2F /* PreviewButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A71DC273ACE3000C5AF2F /* PreviewButtonView.swift */; };
 		219C521927315BC6007B6B36 /* AsyncRecorderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C521827315BC6007B6B36 /* AsyncRecorderApp.swift */; };
 		219C521B27315BC6007B6B36 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C521A27315BC6007B6B36 /* PopupView.swift */; };
 		219C521D27315BCB007B6B36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 219C521C27315BCB007B6B36 /* Assets.xcassets */; };
@@ -68,6 +73,10 @@
 		212EDCD42739A03E00629D49 /* InvisibleDesktop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvisibleDesktop.swift; sourceTree = "<group>"; };
 		212EDCD62739DA2300629D49 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		212EDCD8273A61CF00629D49 /* PreviewWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWindowController.swift; sourceTree = "<group>"; };
+		212EDCDA273AA77000629D49 /* BlurEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurEffect.swift; sourceTree = "<group>"; };
+		212EDCDE273AA80000629D49 /* PreviewImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewImageButton.swift; sourceTree = "<group>"; };
+		212EDCE0273AA83400629D49 /* PreviewDetailedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewDetailedButton.swift; sourceTree = "<group>"; };
+		212EDCE9273AAB4F00629D49 /* PreviewHoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewHoverView.swift; sourceTree = "<group>"; };
 		217E70AA2731CF9500F30088 /* Capture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Capture.swift; sourceTree = "<group>"; };
 		217E70AC2731CF9E00F30088 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		217E70AF2731CFB700F30088 /* RecorderConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderConfiguration.swift; sourceTree = "<group>"; };
@@ -84,6 +93,7 @@
 		2182FFA2273401FC005AA7AA /* CameraSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSize.swift; sourceTree = "<group>"; };
 		2182FFA527353B07005AA7AA /* CameraSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSettingsView.swift; sourceTree = "<group>"; };
 		2182FFA727353E2E005AA7AA /* CameraSizeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSizeButton.swift; sourceTree = "<group>"; };
+		219A71DC273ACE3000C5AF2F /* PreviewButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewButtonView.swift; sourceTree = "<group>"; };
 		219C521527315BC6007B6B36 /* AsyncRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AsyncRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		219C521827315BC6007B6B36 /* AsyncRecorderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncRecorderApp.swift; sourceTree = "<group>"; };
 		219C521A27315BC6007B6B36 /* PopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupView.swift; sourceTree = "<group>"; };
@@ -135,15 +145,86 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		212EDCD3273970B100629D49 /* Controllers */ = {
+		212EDCDC273AA7D700629D49 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				212EDCE6273AA99800629D49 /* Controller */,
+				212EDCDD273AA7E300629D49 /* Components */,
+				212EDCD62739DA2300629D49 /* PreviewView.swift */,
+			);
+			path = Preview;
+			sourceTree = "<group>";
+		};
+		212EDCDD273AA7E300629D49 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				212EDCDE273AA80000629D49 /* PreviewImageButton.swift */,
+				212EDCE0273AA83400629D49 /* PreviewDetailedButton.swift */,
+				212EDCE9273AAB4F00629D49 /* PreviewHoverView.swift */,
+				219A71DC273ACE3000C5AF2F /* PreviewButtonView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		212EDCE2273AA89F00629D49 /* Countdown */ = {
+			isa = PBXGroup;
+			children = (
+				212EDCE7273AA9A200629D49 /* Controller */,
+				212EDCC827383FC100629D49 /* CountdownView.swift */,
+			);
+			path = Countdown;
+			sourceTree = "<group>";
+		};
+		212EDCE3273AA90600629D49 /* Windows */ = {
+			isa = PBXGroup;
+			children = (
+				212EDCE4273AA96400629D49 /* Utils */,
+				217E70C42731DBC700F30088 /* Popup */,
+				212EDCDC273AA7D700629D49 /* Preview */,
+				212EDCE2273AA89F00629D49 /* Countdown */,
+				219C5228273168A7007B6B36 /* Camera */,
+			);
+			path = Windows;
+			sourceTree = "<group>";
+		};
+		212EDCE4273AA96400629D49 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				212EDCDA273AA77000629D49 /* BlurEffect.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		212EDCE5273AA98C00629D49 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				212EDCD12739706A00629D49 /* PopoverController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		212EDCE6273AA99800629D49 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				212EDCD8273A61CF00629D49 /* PreviewWindowController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		212EDCE7273AA9A200629D49 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
 				212EDCCD27391C6300629D49 /* CountdownWindowController.swift */,
-				212EDCCF27391CE000629D49 /* CameraWindowController.swift */,
-				212EDCD12739706A00629D49 /* PopoverController.swift */,
-				212EDCD8273A61CF00629D49 /* PreviewWindowController.swift */,
 			);
-			path = Controllers;
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		212EDCE8273AA9AC00629D49 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				212EDCCF27391CE000629D49 /* CameraWindowController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		217E70A92731CF6800F30088 /* Recorder */ = {
@@ -202,6 +283,7 @@
 		217E70C42731DBC700F30088 /* Popup */ = {
 			isa = PBXGroup;
 			children = (
+				212EDCE5273AA98C00629D49 /* Controller */,
 				2126547D27359E0400E1BDD4 /* Components */,
 				217E70C52731DC0000F30088 /* StoppedPopupView.swift */,
 				217E70C72731DC1400F30088 /* ErrorPopupView.swift */,
@@ -246,18 +328,14 @@
 		219C521727315BC6007B6B36 /* AsyncRecorder */ = {
 			isa = PBXGroup;
 			children = (
-				212EDCD3273970B100629D49 /* Controllers */,
-				217E70C42731DBC700F30088 /* Popup */,
+				212EDCE3273AA90600629D49 /* Windows */,
 				217E70BF2731D10000F30088 /* Utils */,
 				217E70B52731D07200F30088 /* Supabase */,
 				217E70A92731CF6800F30088 /* Recorder */,
 				219C522F2731763C007B6B36 /* Devices */,
-				219C5228273168A7007B6B36 /* Camera */,
 				219C52272731622A007B6B36 /* Info.plist */,
 				219C521827315BC6007B6B36 /* AsyncRecorderApp.swift */,
 				219C521A27315BC6007B6B36 /* PopupView.swift */,
-				212EDCC827383FC100629D49 /* CountdownView.swift */,
-				212EDCD62739DA2300629D49 /* PreviewView.swift */,
 				219C521C27315BCB007B6B36 /* Assets.xcassets */,
 				219C522127315BCB007B6B36 /* AsyncRecorder.entitlements */,
 				219C521E27315BCB007B6B36 /* Preview Content */,
@@ -277,6 +355,7 @@
 		219C5228273168A7007B6B36 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
+				212EDCE8273AA9AC00629D49 /* Controller */,
 				212654842736851E00E1BDD4 /* Utils */,
 				2182FFA427353AF3005AA7AA /* Components */,
 				219C522927316A70007B6B36 /* CameraPreviewView.swift */,
@@ -395,16 +474,21 @@
 				217E70BA2731D0B700F30088 /* FileDeleteRequest.swift in Sources */,
 				2126547F27359E1600E1BDD4 /* DeviceToggle.swift in Sources */,
 				212EDCD52739A03E00629D49 /* InvisibleDesktop.swift in Sources */,
+				212EDCDB273AA77000629D49 /* BlurEffect.swift in Sources */,
+				212EDCDF273AA80000629D49 /* PreviewImageButton.swift in Sources */,
 				212EDCD9273A61CF00629D49 /* PreviewWindowController.swift in Sources */,
 				217E70AD2731CF9E00F30088 /* Upload.swift in Sources */,
 				2182FFA827353E2E005AA7AA /* CameraSizeButton.swift in Sources */,
+				212EDCE1273AA83400629D49 /* PreviewDetailedButton.swift in Sources */,
 				212269E62732B45E00B39138 /* FinishedPopupView.swift in Sources */,
 				219C523327319B50007B6B36 /* MicManager.swift in Sources */,
 				217E70C82731DC1400F30088 /* ErrorPopupView.swift in Sources */,
 				2126548D2737F66600E1BDD4 /* FileListRequest.swift in Sources */,
 				219C522E27316AF5007B6B36 /* CameraContainerView.swift in Sources */,
 				219C522A27316A70007B6B36 /* CameraPreviewView.swift in Sources */,
+				212EDCEA273AAB4F00629D49 /* PreviewHoverView.swift in Sources */,
 				217E70B02731CFB700F30088 /* RecorderConfiguration.swift in Sources */,
+				219A71DD273ACE3000C5AF2F /* PreviewButtonView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
