@@ -40,7 +40,7 @@ class PreviewWindowController: NSWindowController, NSWindowDelegate {
     let targetWidth = 288
     let targetHeight = 180
     
-    init() {
+    init(url: String, videoID: String) {
         let window = NSWindow()
         window.backingType = .buffered
         window.styleMask = [.closable]
@@ -49,7 +49,7 @@ class PreviewWindowController: NSWindowController, NSWindowDelegate {
         window.delegate = self
         
         previewManager = PreviewManager(controller: self)
-        let previewView = PreviewView(url: "", videoID: "").environmentObject(previewManager!)
+        let previewView = PreviewView(url: url, videoID: videoID).environmentObject(previewManager!)
         window.contentView = NSHostingView(rootView: previewView)
 
         // general config

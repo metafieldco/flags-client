@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		212269E62732B45E00B39138 /* FinishedPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212269E52732B45E00B39138 /* FinishedPopupView.swift */; };
 		2126547C2735858D00E1BDD4 /* AnyShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2126547B2735858D00E1BDD4 /* AnyShape.swift */; };
 		2126547F27359E1600E1BDD4 /* DeviceToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2126547E27359E1500E1BDD4 /* DeviceToggle.swift */; };
 		212654812735A1C900E1BDD4 /* VideoTableInsertRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212654802735A1C900E1BDD4 /* VideoTableInsertRequest.swift */; };
@@ -57,7 +56,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		212269E52732B45E00B39138 /* FinishedPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishedPopupView.swift; sourceTree = "<group>"; };
 		2126547B2735858D00E1BDD4 /* AnyShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyShape.swift; sourceTree = "<group>"; };
 		2126547E27359E1500E1BDD4 /* DeviceToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceToggle.swift; sourceTree = "<group>"; };
 		212654802735A1C900E1BDD4 /* VideoTableInsertRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTableInsertRequest.swift; sourceTree = "<group>"; };
@@ -290,7 +288,6 @@
 				2126547D27359E0400E1BDD4 /* Components */,
 				217E70C52731DC0000F30088 /* StoppedPopupView.swift */,
 				217E70C72731DC1400F30088 /* ErrorPopupView.swift */,
-				212269E52732B45E00B39138 /* FinishedPopupView.swift */,
 			);
 			path = Popup;
 			sourceTree = "<group>";
@@ -484,7 +481,6 @@
 				217E70AD2731CF9E00F30088 /* Upload.swift in Sources */,
 				2182FFA827353E2E005AA7AA /* CameraSizeButton.swift in Sources */,
 				212EDCE1273AA83400629D49 /* PreviewDetailedButton.swift in Sources */,
-				212269E62732B45E00B39138 /* FinishedPopupView.swift in Sources */,
 				219C523327319B50007B6B36 /* MicManager.swift in Sources */,
 				217E70C82731DC1400F30088 /* ErrorPopupView.swift in Sources */,
 				2126548D2737F66600E1BDD4 /* FileListRequest.swift in Sources */,

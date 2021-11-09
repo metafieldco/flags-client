@@ -110,8 +110,6 @@ class Upload: NSObject, AVAssetWriterDelegate {
     func assetWriter(_ writer: AVAssetWriter, didOutputSegmentData segmentData: Data, segmentType: AVAssetSegmentType, segmentReport: AVAssetSegmentReport?) {
         let isInitializationSegment: Bool
         
-        print("receieved segment: \(Date().description)")
-        
         switch segmentType {
         case .initialization:
             isInitializationSegment = true
