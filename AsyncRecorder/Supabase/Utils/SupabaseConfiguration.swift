@@ -7,9 +7,9 @@
 
 import Foundation
 
-let bucket = "videos"
-
-let listBucket = "list/videos"
+let videoBucket = "videos"
+let thumbnailBucket = "thumbnails"
+let listVideoBucket = "list/videos"
 
 let temporaryDirectoryUrl = URL(fileURLWithPath: NSTemporaryDirectory(),
                                             isDirectory: true)

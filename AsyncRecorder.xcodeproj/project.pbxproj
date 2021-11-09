@@ -44,6 +44,7 @@
 		2182FFA827353E2E005AA7AA /* CameraSizeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182FFA727353E2E005AA7AA /* CameraSizeButton.swift */; };
 		219A71DD273ACE3000C5AF2F /* PreviewButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A71DC273ACE3000C5AF2F /* PreviewButtonView.swift */; };
 		219A71DF273ADB8B00C5AF2F /* PreviewFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A71DE273ADB8B00C5AF2F /* PreviewFeedbackView.swift */; };
+		219A71E1273AF74200C5AF2F /* Screenshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A71E0273AF74200C5AF2F /* Screenshot.swift */; };
 		219C521927315BC6007B6B36 /* AsyncRecorderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C521827315BC6007B6B36 /* AsyncRecorderApp.swift */; };
 		219C521B27315BC6007B6B36 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C521A27315BC6007B6B36 /* PopupView.swift */; };
 		219C521D27315BCB007B6B36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 219C521C27315BCB007B6B36 /* Assets.xcassets */; };
@@ -94,6 +95,7 @@
 		2182FFA727353E2E005AA7AA /* CameraSizeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSizeButton.swift; sourceTree = "<group>"; };
 		219A71DC273ACE3000C5AF2F /* PreviewButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewButtonView.swift; sourceTree = "<group>"; };
 		219A71DE273ADB8B00C5AF2F /* PreviewFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewFeedbackView.swift; sourceTree = "<group>"; };
+		219A71E0273AF74200C5AF2F /* Screenshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screenshot.swift; sourceTree = "<group>"; };
 		219C521527315BC6007B6B36 /* AsyncRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AsyncRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		219C521827315BC6007B6B36 /* AsyncRecorderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncRecorderApp.swift; sourceTree = "<group>"; };
 		219C521A27315BC6007B6B36 /* PopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupView.swift; sourceTree = "<group>"; };
@@ -277,6 +279,7 @@
 			children = (
 				217E70C02731D11F00F30088 /* RuntimeError.swift */,
 				212EDCD42739A03E00629D49 /* InvisibleDesktop.swift */,
+				219A71E0273AF74200C5AF2F /* Screenshot.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -479,6 +482,7 @@
 				219A71DF273ADB8B00C5AF2F /* PreviewFeedbackView.swift in Sources */,
 				212EDCD9273A61CF00629D49 /* PreviewWindowController.swift in Sources */,
 				217E70AD2731CF9E00F30088 /* Upload.swift in Sources */,
+				219A71E1273AF74200C5AF2F /* Screenshot.swift in Sources */,
 				2182FFA827353E2E005AA7AA /* CameraSizeButton.swift in Sources */,
 				212EDCE1273AA83400629D49 /* PreviewDetailedButton.swift in Sources */,
 				219C523327319B50007B6B36 /* MicManager.swift in Sources */,

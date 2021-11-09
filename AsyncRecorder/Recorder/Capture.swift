@@ -77,6 +77,7 @@ class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapture
     
     func start() {
         captureSession.startRunning()
+        takeScreenshot()
     }
     
     func stop(_ cleanup: Bool = false){

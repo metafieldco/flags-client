@@ -33,9 +33,11 @@ struct PreviewView: View {
                 PreviewHoverView().zIndex(1)
             }
             
-            Image("ScreenshotImage")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
+            if screenshot != nil {
+                Image(screenshot!, scale: 1, label: Text(""))
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            }
         }.clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }

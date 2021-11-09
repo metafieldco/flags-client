@@ -76,6 +76,7 @@ class RecordingManager: ObservableObject {
         toggleDesktop(hide: true)
         
         state = .recording
+        
         delegate.showCountdownWindow()
         
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true){ _ in
