@@ -22,6 +22,8 @@
 		212EDCD027391CE000629D49 /* CameraWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCCF27391CE000629D49 /* CameraWindowController.swift */; };
 		212EDCD22739706A00629D49 /* PopoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCD12739706A00629D49 /* PopoverController.swift */; };
 		212EDCD52739A03E00629D49 /* InvisibleDesktop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCD42739A03E00629D49 /* InvisibleDesktop.swift */; };
+		212EDCD72739DA2300629D49 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCD62739DA2300629D49 /* PreviewView.swift */; };
+		212EDCD9273A61CF00629D49 /* PreviewWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCD8273A61CF00629D49 /* PreviewWindowController.swift */; };
 		217E70AB2731CF9500F30088 /* Capture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AA2731CF9500F30088 /* Capture.swift */; };
 		217E70AD2731CF9E00F30088 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AC2731CF9E00F30088 /* Upload.swift */; };
 		217E70B02731CFB700F30088 /* RecorderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AF2731CFB700F30088 /* RecorderConfiguration.swift */; };
@@ -64,6 +66,8 @@
 		212EDCCF27391CE000629D49 /* CameraWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraWindowController.swift; sourceTree = "<group>"; };
 		212EDCD12739706A00629D49 /* PopoverController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverController.swift; sourceTree = "<group>"; };
 		212EDCD42739A03E00629D49 /* InvisibleDesktop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvisibleDesktop.swift; sourceTree = "<group>"; };
+		212EDCD62739DA2300629D49 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		212EDCD8273A61CF00629D49 /* PreviewWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWindowController.swift; sourceTree = "<group>"; };
 		217E70AA2731CF9500F30088 /* Capture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Capture.swift; sourceTree = "<group>"; };
 		217E70AC2731CF9E00F30088 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		217E70AF2731CFB700F30088 /* RecorderConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderConfiguration.swift; sourceTree = "<group>"; };
@@ -137,6 +141,7 @@
 				212EDCCD27391C6300629D49 /* CountdownWindowController.swift */,
 				212EDCCF27391CE000629D49 /* CameraWindowController.swift */,
 				212EDCD12739706A00629D49 /* PopoverController.swift */,
+				212EDCD8273A61CF00629D49 /* PreviewWindowController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -252,6 +257,7 @@
 				219C521827315BC6007B6B36 /* AsyncRecorderApp.swift */,
 				219C521A27315BC6007B6B36 /* PopupView.swift */,
 				212EDCC827383FC100629D49 /* CountdownView.swift */,
+				212EDCD62739DA2300629D49 /* PreviewView.swift */,
 				219C521C27315BCB007B6B36 /* Assets.xcassets */,
 				219C522127315BCB007B6B36 /* AsyncRecorder.entitlements */,
 				219C521E27315BCB007B6B36 /* Preview Content */,
@@ -361,6 +367,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				212EDCC927383FC100629D49 /* CountdownView.swift in Sources */,
+				212EDCD72739DA2300629D49 /* PreviewView.swift in Sources */,
 				217E70BC2731D0C600F30088 /* FileUploadSuccess.swift in Sources */,
 				219C521B27315BC6007B6B36 /* PopupView.swift in Sources */,
 				217E70B42731CFED00F30088 /* Segment.swift in Sources */,
@@ -388,6 +395,7 @@
 				217E70BA2731D0B700F30088 /* FileDeleteRequest.swift in Sources */,
 				2126547F27359E1600E1BDD4 /* DeviceToggle.swift in Sources */,
 				212EDCD52739A03E00629D49 /* InvisibleDesktop.swift in Sources */,
+				212EDCD9273A61CF00629D49 /* PreviewWindowController.swift in Sources */,
 				217E70AD2731CF9E00F30088 /* Upload.swift in Sources */,
 				2182FFA827353E2E005AA7AA /* CameraSizeButton.swift in Sources */,
 				212269E62732B45E00B39138 /* FinishedPopupView.swift in Sources */,

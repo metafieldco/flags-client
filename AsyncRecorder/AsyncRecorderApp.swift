@@ -24,6 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     var popoverController: PopoverController?
     var countdownWindowController: CountdownWindowController?
     var camWindowController: CameraWindowController?
+    var previewWindowController: PreviewWindowController?
     
     var micManager: MicManager?
     var camManager: CamManager?
@@ -45,6 +46,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         micManager = MicManager()
         camManager = CamManager(self)
         recordingManager = RecordingManager(micManager: micManager!, delegate: self)
+        
+        previewWindowController = PreviewWindowController()
+        previewWindowController?.showWindow(nil)
     }
     
     @objc func togglePopover(_ sender: Any?) {
