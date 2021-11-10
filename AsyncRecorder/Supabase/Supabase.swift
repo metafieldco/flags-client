@@ -37,23 +37,19 @@ class Supabase: NSObject {
     }
     
     func cleanup(uuid: String){
-        // give supabase a chance to propogate
-        DispatchQueue.main.asyncAfter(deadline: .now() + deleteDelay){
+        DispatchQueue.global(qos: .background).async {
             do {
-                // get all files from storage
-                try self.listFolder(bucket: listVideoBucket, uuid: uuid){ result in
+                // mark video as recycled - soft delete
+                try self.updateVideoRecord(uuid: uuid, updateReq: VideoTableUpdateRequest(recycled: true)){ result in
                     switch result {
-                    case .success(let req):
-                        self.deleteFolder(bucket: videoBucket, body: req) // ignore any errors here
-                        self.deleteFolder(bucket: thumbnailBucket, body: FileDeleteRequest(prefixes: ["\(uuid)/\(screenshotFileName)"]))
-                    case .failure(let error):
-                        print("Failed to list folder: \(error.localisedDescription())")
+                    case .success:
+                        print("Successfully marked video for soft deletion with id: \(uuid)")
+                    case .failure(let err):
+                        print("Error when soft deleting video: \(err) with id: \(uuid)")
                     }
                 }
-                // delete record (if it doesn't exist still returns 204)
-                self.deleteVideoRecord(uuid: uuid)
             }catch{
-                print("RuntimeError when cleaning up: \(error)")
+                print("Runtime error when soft deleting video: \(error) with id: \(uuid)")
             }
         }
     }
@@ -179,35 +175,35 @@ class Supabase: NSObject {
         insertRecordTask.resume()
     }
     
-    private func listFolder(bucket: String, uuid: String, finish: @escaping (Result<FileDeleteRequest, SupabaseError>) -> Void) throws {
-        // configure upload request
-        guard supabaseStorageUrl != nil else {
-            throw RuntimeError("Supabase storage url is nil.")
+    private func updateVideoRecord(uuid: String, updateReq: VideoTableUpdateRequest, finish: @escaping (Result<String, SupabaseError>) -> Void) throws{
+        guard supabaseTableUrl != nil else {
+            throw RuntimeError("Supabase table url is nil")
         }
-        let url = supabaseStorageUrl!.appendingPathComponent(bucket)
-        
-        var request = URLRequest(url: url,
+        let queryItems = [URLQueryItem(name: "video_id", value: "eq.\(uuid)")]
+        var urlComps = URLComponents(string: supabaseTableUrl!.absoluteString)
+        urlComps?.queryItems = queryItems
+        var request = URLRequest(url: urlComps!.url!,
                                  cachePolicy: .reloadIgnoringLocalCacheData,
                                  timeoutInterval: 10)
-        request.httpMethod = "POST"
+        request.httpMethod = "PATCH"
         
         guard supabaseServiceRoleKey != nil else {
             throw RuntimeError("Can't create bearer token as api key is nil")
         }
         request.setValue( "Bearer \(supabaseServiceRoleKey!)", forHTTPHeaderField: "Authorization")
+        request.setValue(supabaseServiceRoleKey, forHTTPHeaderField: "apikey")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("return=representation", forHTTPHeaderField: "Prefer")
         
-        let jsonData = try? JSONEncoder().encode(FileListRequest(prefix: uuid))
+        let jsonData = try? JSONEncoder().encode(updateReq)
         request.httpBody = jsonData
         
-        // make upload request
-        let listTask = URLSession.shared.dataTask(with: request) { data, response, error in
+        let updateRecordTask = URLSession.shared.dataTask(with: request){ data, response, error in
             if let error = error {
                 finish(.failure(.internalServerError(error)))
                 return
             }
             
-            // Response should always have data
             guard let data = data else {
                 finish(.failure(.noData))
                 return
@@ -215,7 +211,7 @@ class Supabase: NSObject {
             
             guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
                 guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let dictionary = json as? [String: Any] else {
-                    finish(.failure(.serialization("Couldn't cast response to JSON [String: Any] when listing storage folder.")))
+                    finish(.failure(.serialization("Couldn't cast data as JSON.")))
                     return
                 }
                 do {
@@ -228,135 +224,8 @@ class Supabase: NSObject {
                 }
             }
             
-            guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let dictionary = json as? [[String: Any]] else {
-                finish(.failure(.serialization("Couldn't cast data as JSON array")))
-                return
-            }
-            var prefixes = [String]()
-
-            do {
-                for item in dictionary {
-                    let file = try FileListSuccess(json: item)
-                    prefixes.append("\(uuid)/\(file.name)")
-                }
-                finish(.success(FileDeleteRequest(prefixes: prefixes)))
-            }catch{
-                finish(.failure(.serialization("Couldn't cast data to FileListSuccess: \(error.localizedDescription) Response: \(dictionary)")))
-                return
-            }
+            finish(.success("All good in da hood"))
         }
-        listTask.resume()
-    }
-    
-    private func deleteFolder(bucket: String, body: FileDeleteRequest) {
-        // configure delete request
-        guard supabaseStorageUrl != nil else {
-            print("Supabase storage url is nil")
-            return
-        }
-        var request = URLRequest(url: supabaseStorageUrl!.appendingPathComponent(bucket),
-                                 cachePolicy: .reloadIgnoringLocalCacheData,
-                                 timeoutInterval: 10)
-        request.httpMethod = "DELETE"
-        
-        guard supabaseServiceRoleKey != nil else {
-            print("Can't create bearer token as api key is nil")
-            return
-        }
-        request.setValue( "Bearer \(supabaseServiceRoleKey!)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let jsonData = try? JSONEncoder().encode(body)
-        request.httpBody = jsonData
-        
-        let deleteTask = URLSession.shared.dataTask(with: request){ data, response, error in
-            if let error = error {
-                print("Internal server error when deleting folder: \(error)")
-                return
-            }
-            
-            guard let data = data else {
-                print("Bad response from server when deleting folder. No data.")
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
-                guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let dictionary = json as? [String: Any] else {
-                    print("Couldn't cast response to JSON [String: Any] when deleting folder.")
-                    return
-                }
-                do {
-                    let errorResponse = try SupabaseError(json: dictionary)
-                    print(errorResponse.localisedDescription())
-                    return
-                }catch{
-                    print("Couldn't cast data to ErrorResponse: \(error.localizedDescription) Response: \(dictionary)")
-                    return
-                }
-            }
-            
-            // we were successful if the array in the response is the same length as the amount of segment files we sent to be deleted.
-            guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let array = json as? [Any] else {
-                print("Couldn't cast response to Array of structs when deleting folder.")
-                return
-            }
-            if array.count == body.prefixes.count {
-                print("Successfully deleted folder from s3")
-            }else{
-                print("Failed to delete folder from s3. Response length did not match body. Response count: \(array.count), Body count: \(body.prefixes.count)")
-            }
-        }
-        deleteTask.resume()
-    }
-    
-    private func deleteVideoRecord(uuid: String) {
-        // configure delete request
-        guard supabaseTableUrl != nil else {
-            print("Supabase table url is nil")
-            return
-        }
-        let queryItems = [URLQueryItem(name: "video_id", value: "eq.\(uuid)")]
-        var urlComps = URLComponents(string: supabaseTableUrl!.absoluteString)
-        urlComps?.queryItems = queryItems
-        var request = URLRequest(url: urlComps!.url!,
-                                 cachePolicy: .reloadIgnoringLocalCacheData,
-                                 timeoutInterval: 10)
-        request.httpMethod = "DELETE"
-        
-        guard supabaseServiceRoleKey != nil else {
-            print("Can't create bearer token as api key is nil")
-            return
-        }
-        request.setValue( "Bearer \(supabaseServiceRoleKey!)", forHTTPHeaderField: "Authorization")
-        request.setValue(supabaseServiceRoleKey, forHTTPHeaderField: "apikey")
-        
-        let deleteTask = URLSession.shared.dataTask(with: request){ data, response, error in
-            if let error = error {
-                print("Internal server error when deleting video record: \(error)")
-                return
-            }
-            
-            guard let data = data else {
-                print("Bad response from server when deleting video record. No data.")
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
-                guard let json = try? JSONSerialization.jsonObject(with: data, options: []), let dictionary = json as? [String: Any] else {
-                    print("Couldn't cast response to JSON [String: Any] when deleting video record.")
-                    return
-                }
-                do {
-                    let errorResponse = try SupabaseError(json: dictionary)
-                    print(errorResponse.localisedDescription())
-                    return
-                }catch{
-                    print("Couldn't cast data to ErrorResponse: \(error.localizedDescription) Response: \(dictionary)")
-                    return
-                }
-            }
-            print("Successfully deleted video record with video_id: \(uuid)")
-        }
-        deleteTask.resume()
+        updateRecordTask.resume()
     }
 }

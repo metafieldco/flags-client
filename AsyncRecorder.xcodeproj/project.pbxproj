@@ -13,8 +13,6 @@
 		21265483273684CD00E1BDD4 /* ButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21265482273684CD00E1BDD4 /* ButtonView.swift */; };
 		2126548627368B5C00E1BDD4 /* PopupContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2126548527368B5C00E1BDD4 /* PopupContainerView.swift */; };
 		2126548B2737F43200E1BDD4 /* SupabaseConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2126548A2737F43200E1BDD4 /* SupabaseConfiguration.swift */; };
-		2126548D2737F66600E1BDD4 /* FileListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2126548C2737F66600E1BDD4 /* FileListRequest.swift */; };
-		2126548F2737F76600E1BDD4 /* FileListSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2126548E2737F76600E1BDD4 /* FileListSuccess.swift */; };
 		212EDCC927383FC100629D49 /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCC827383FC100629D49 /* CountdownView.swift */; };
 		212EDCCB27384A0100629D49 /* RecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCCA27384A0100629D49 /* RecordingManager.swift */; };
 		212EDCCE27391C6300629D49 /* CountdownWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EDCCD27391C6300629D49 /* CountdownWindowController.swift */; };
@@ -33,7 +31,6 @@
 		217E70B22731CFDC00F30088 /* PlaylistGeneration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70B12731CFDC00F30088 /* PlaylistGeneration.swift */; };
 		217E70B42731CFED00F30088 /* Segment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70B32731CFED00F30088 /* Segment.swift */; };
 		217E70B82731D08D00F30088 /* Supabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70B72731D08D00F30088 /* Supabase.swift */; };
-		217E70BA2731D0B700F30088 /* FileDeleteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70B92731D0B700F30088 /* FileDeleteRequest.swift */; };
 		217E70BC2731D0C600F30088 /* FileUploadSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70BB2731D0C600F30088 /* FileUploadSuccess.swift */; };
 		217E70BE2731D0D100F30088 /* SupabaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70BD2731D0D100F30088 /* SupabaseError.swift */; };
 		217E70C12731D11F00F30088 /* RuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70C02731D11F00F30088 /* RuntimeError.swift */; };
@@ -45,6 +42,7 @@
 		219A71DD273ACE3000C5AF2F /* PreviewButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A71DC273ACE3000C5AF2F /* PreviewButtonView.swift */; };
 		219A71DF273ADB8B00C5AF2F /* PreviewFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A71DE273ADB8B00C5AF2F /* PreviewFeedbackView.swift */; };
 		219A71E1273AF74200C5AF2F /* Screenshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A71E0273AF74200C5AF2F /* Screenshot.swift */; };
+		219A71E3273BFD0000C5AF2F /* VideoTableUpdateRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A71E2273BFD0000C5AF2F /* VideoTableUpdateRequest.swift */; };
 		219C521927315BC6007B6B36 /* AsyncRecorderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C521827315BC6007B6B36 /* AsyncRecorderApp.swift */; };
 		219C521B27315BC6007B6B36 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C521A27315BC6007B6B36 /* PopupView.swift */; };
 		219C521D27315BCB007B6B36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 219C521C27315BCB007B6B36 /* Assets.xcassets */; };
@@ -63,8 +61,6 @@
 		21265482273684CD00E1BDD4 /* ButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonView.swift; sourceTree = "<group>"; };
 		2126548527368B5C00E1BDD4 /* PopupContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupContainerView.swift; sourceTree = "<group>"; };
 		2126548A2737F43200E1BDD4 /* SupabaseConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseConfiguration.swift; sourceTree = "<group>"; };
-		2126548C2737F66600E1BDD4 /* FileListRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListRequest.swift; sourceTree = "<group>"; };
-		2126548E2737F76600E1BDD4 /* FileListSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListSuccess.swift; sourceTree = "<group>"; };
 		212EDCC827383FC100629D49 /* CountdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
 		212EDCCA27384A0100629D49 /* RecordingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingManager.swift; sourceTree = "<group>"; };
 		212EDCCD27391C6300629D49 /* CountdownWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownWindowController.swift; sourceTree = "<group>"; };
@@ -83,7 +79,6 @@
 		217E70B12731CFDC00F30088 /* PlaylistGeneration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistGeneration.swift; sourceTree = "<group>"; };
 		217E70B32731CFED00F30088 /* Segment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Segment.swift; sourceTree = "<group>"; };
 		217E70B72731D08D00F30088 /* Supabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supabase.swift; sourceTree = "<group>"; };
-		217E70B92731D0B700F30088 /* FileDeleteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDeleteRequest.swift; sourceTree = "<group>"; };
 		217E70BB2731D0C600F30088 /* FileUploadSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUploadSuccess.swift; sourceTree = "<group>"; };
 		217E70BD2731D0D100F30088 /* SupabaseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseError.swift; sourceTree = "<group>"; };
 		217E70C02731D11F00F30088 /* RuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeError.swift; sourceTree = "<group>"; };
@@ -96,6 +91,7 @@
 		219A71DC273ACE3000C5AF2F /* PreviewButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewButtonView.swift; sourceTree = "<group>"; };
 		219A71DE273ADB8B00C5AF2F /* PreviewFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewFeedbackView.swift; sourceTree = "<group>"; };
 		219A71E0273AF74200C5AF2F /* Screenshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screenshot.swift; sourceTree = "<group>"; };
+		219A71E2273BFD0000C5AF2F /* VideoTableUpdateRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTableUpdateRequest.swift; sourceTree = "<group>"; };
 		219C521527315BC6007B6B36 /* AsyncRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AsyncRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		219C521827315BC6007B6B36 /* AsyncRecorderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncRecorderApp.swift; sourceTree = "<group>"; };
 		219C521A27315BC6007B6B36 /* PopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupView.swift; sourceTree = "<group>"; };
@@ -264,12 +260,10 @@
 		217E70B62731D08100F30088 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				2126548C2737F66600E1BDD4 /* FileListRequest.swift */,
-				217E70B92731D0B700F30088 /* FileDeleteRequest.swift */,
 				217E70BB2731D0C600F30088 /* FileUploadSuccess.swift */,
 				217E70BD2731D0D100F30088 /* SupabaseError.swift */,
 				212654802735A1C900E1BDD4 /* VideoTableInsertRequest.swift */,
-				2126548E2737F76600E1BDD4 /* FileListSuccess.swift */,
+				219A71E2273BFD0000C5AF2F /* VideoTableUpdateRequest.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -456,7 +450,6 @@
 				217E70C12731D11F00F30088 /* RuntimeError.swift in Sources */,
 				212EDCCE27391C6300629D49 /* CountdownWindowController.swift in Sources */,
 				217E70BE2731D0D100F30088 /* SupabaseError.swift in Sources */,
-				2126548F2737F76600E1BDD4 /* FileListSuccess.swift in Sources */,
 				2126548B2737F43200E1BDD4 /* SupabaseConfiguration.swift in Sources */,
 				212EDCD027391CE000629D49 /* CameraWindowController.swift in Sources */,
 				21265483273684CD00E1BDD4 /* ButtonView.swift in Sources */,
@@ -464,6 +457,7 @@
 				212654812735A1C900E1BDD4 /* VideoTableInsertRequest.swift in Sources */,
 				2182FFA627353B07005AA7AA /* CameraSettingsView.swift in Sources */,
 				219C521927315BC6007B6B36 /* AsyncRecorderApp.swift in Sources */,
+				219A71E3273BFD0000C5AF2F /* VideoTableUpdateRequest.swift in Sources */,
 				217E70C62731DC0000F30088 /* StoppedPopupView.swift in Sources */,
 				217E70AB2731CF9500F30088 /* Capture.swift in Sources */,
 				2182FFA3273401FC005AA7AA /* CameraSize.swift in Sources */,
@@ -474,7 +468,6 @@
 				2126548627368B5C00E1BDD4 /* PopupContainerView.swift in Sources */,
 				219C523127317670007B6B36 /* CamManager.swift in Sources */,
 				2126547C2735858D00E1BDD4 /* AnyShape.swift in Sources */,
-				217E70BA2731D0B700F30088 /* FileDeleteRequest.swift in Sources */,
 				2126547F27359E1600E1BDD4 /* DeviceToggle.swift in Sources */,
 				212EDCD52739A03E00629D49 /* InvisibleDesktop.swift in Sources */,
 				212EDCDB273AA77000629D49 /* BlurEffect.swift in Sources */,
@@ -487,7 +480,6 @@
 				212EDCE1273AA83400629D49 /* PreviewDetailedButton.swift in Sources */,
 				219C523327319B50007B6B36 /* MicManager.swift in Sources */,
 				217E70C82731DC1400F30088 /* ErrorPopupView.swift in Sources */,
-				2126548D2737F66600E1BDD4 /* FileListRequest.swift in Sources */,
 				219C522E27316AF5007B6B36 /* CameraContainerView.swift in Sources */,
 				219C522A27316A70007B6B36 /* CameraPreviewView.swift in Sources */,
 				212EDCEA273AAB4F00629D49 /* PreviewHoverView.swift in Sources */,

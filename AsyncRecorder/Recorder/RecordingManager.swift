@@ -48,7 +48,6 @@ class RecordingManager: ObservableObject {
                 DispatchQueue.main.async {
                     self.delegate.deleteCameraPreview()
                     toggleDesktop(hide: false)
-                    self.delegate.refreshPopover()
                 }
             }
         }
