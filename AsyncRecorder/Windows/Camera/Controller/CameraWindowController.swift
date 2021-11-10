@@ -34,13 +34,15 @@ class CameraWindowController: NSWindowController, NSWindowDelegate{
         window.isMovableByWindowBackground = true
         window.collectionBehavior = .canJoinAllSpaces
         
-        // set frame origin (bottom left corner)
-        guard let screen = window.screen else {
-            super.init(window: window)
-            window.delegate = self
-            return
+        if camManager.size != .fullScreen {
+            // set frame origin (bottom left corner)
+            guard let screen = window.screen else {
+                super.init(window: window)
+                window.delegate = self
+                return
+            }
+            window.setFrameOrigin(NSPoint(x: 0, y: screen.visibleFrame.minY + 50))
         }
-        window.setFrameOrigin(NSPoint(x: 0, y: screen.visibleFrame.minY + 50))
 
         super.init(window: window)
         window.delegate = self

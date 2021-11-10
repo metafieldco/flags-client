@@ -39,6 +39,7 @@ class RecordingManager: ObservableObject {
                 self.delegate?.showPreviewWindow(url: url, videoID: videoID)
                 self.delegate?.deleteCameraPreview()
                 toggleDesktop(hide: false)
+                self.delegate?.refreshPopover()
             }
         }
     }
