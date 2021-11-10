@@ -8,16 +8,18 @@
 import Foundation
 
 func toggleDesktop(hide: Bool) {
-    let desktopUrl =  FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!
+    DispatchQueue.main.async {
+        let desktopUrl =  FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!
 
-    do {
-        let directoryContents = try FileManager.default.contentsOfDirectory(at: desktopUrl, includingPropertiesForKeys: nil)
+        do {
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: desktopUrl, includingPropertiesForKeys: nil)
 
-        for var content in directoryContents {
-            content.isHidden = hide
+            for var content in directoryContents {
+                content.isHidden = hide
+            }
+        } catch {
+            print(error)
         }
-    } catch {
-        print(error)
     }
 }
 

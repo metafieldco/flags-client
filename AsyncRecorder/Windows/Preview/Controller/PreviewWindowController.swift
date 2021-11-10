@@ -18,7 +18,7 @@ enum PreviewButtonState {
 
 class PreviewManager: ObservableObject {
     
-    var controller: PreviewWindowController
+    weak var controller: PreviewWindowController?
     
     init(controller: PreviewWindowController) {
         self.controller = controller
@@ -28,7 +28,7 @@ class PreviewManager: ObservableObject {
     @Published var state: PreviewButtonState = .none {
         didSet {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
-                self.controller.close()
+                self.controller?.close()
             }
         }
     }
@@ -77,7 +77,9 @@ class PreviewWindowController: NSWindowController, NSWindowDelegate {
     }
     
     override func showWindow(_ sender: Any?) {
-        super.showWindow(sender)
+        DispatchQueue.main.async {
+            super.showWindow(sender)
+        }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 7.0){
             guard let previewManager = self.previewManager, previewManager.state != .none else {
@@ -92,23 +94,29 @@ class PreviewWindowController: NSWindowController, NSWindowDelegate {
             super.close()
             return
         }
-        NSAnimationContext.runAnimationGroup({ context in
-            context.duration = 0.25
-            window.animator().setFrame(NSRect(x: Int(screen.visibleFrame.maxX), y: Int(screen.visibleFrame.minY) + 10, width: self.targetWidth, height: self.targetHeight), display: true, animate: true)
-        }, completionHandler: {
-            super.close()
-        })
+        DispatchQueue.main.async {
+            NSAnimationContext.runAnimationGroup({ context in
+                context.duration = 0.25
+                window.animator().setFrame(NSRect(x: Int(screen.visibleFrame.maxX), y: Int(screen.visibleFrame.minY) + 10, width: self.targetWidth, height: self.targetHeight), display: true, animate: true)
+            }, completionHandler: {
+                super.close()
+            })
+        }
     }
     
     override func mouseEntered(with event: NSEvent) {
-        withAnimation{
-            self.previewManager?.isHovering = true
+        DispatchQueue.main.async {
+            withAnimation{
+                self.previewManager?.isHovering = true
+            }
         }
     }
     
     override func mouseExited(with event: NSEvent) {
-        withAnimation{
-            self.previewManager?.isHovering = false
+        DispatchQueue.main.async {
+            withAnimation{
+                self.previewManager?.isHovering = false
+            }
         }
     }
     
@@ -117,6 +125,8 @@ class PreviewWindowController: NSWindowController, NSWindowDelegate {
     }
     
     func windowWillClose(_ notification: Notification) {
-        self.window?.contentView = nil
+        DispatchQueue.main.async {
+            self.window?.contentView = nil
+        }
     }
 }

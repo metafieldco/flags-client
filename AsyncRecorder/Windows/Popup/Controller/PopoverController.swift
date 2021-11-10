@@ -11,12 +11,11 @@ import SwiftUI
 
 class PopoverController: NSObject, NSPopoverDelegate {
     
-    let popover = NSPopover()
-    
-    var appDelegate: AppDelegate
-    var micManager: MicManager
-    var camManager: CamManager
-    var recordingManager: RecordingManager?
+    private let popover = NSPopover()
+    weak private var appDelegate: AppDelegate?
+    private var micManager: MicManager
+    private var camManager: CamManager
+    private var recordingManager: RecordingManager?
     
     var isShown: Bool {
         return popover.isShown
@@ -51,16 +50,19 @@ class PopoverController: NSObject, NSPopoverDelegate {
     }
     
     func show(button: NSStatusBarButton){
-        popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
-        popover.contentViewController?.view.window?.makeKey()
+        DispatchQueue.main.async {
+            self.popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
+            self.popover.contentViewController?.view.window?.makeKey()
+        }
     }
     
     func close(){
-        popover.close()
+        DispatchQueue.main.async {
+            self.popover.close()
+        }
     }
     
     func popoverDidShow(_ notification: Notification) {
-        print("Popup open delegate function triggered")
         guard let state = recordingManager?.state else {
             return
         }
@@ -69,7 +71,7 @@ class PopoverController: NSObject, NSPopoverDelegate {
             return
         default:
             if camManager.enabled && camManager.isGranted {
-                appDelegate.showCameraPreview()
+                self.appDelegate?.showCameraPreview()
             }
         }
     }
@@ -82,10 +84,8 @@ class PopoverController: NSObject, NSPopoverDelegate {
     }
     
     func popoverDidClose(_ notification: Notification) {
-        print("Popup close delegate function triggered")
         if recordingManager?.state != .recording {
-            print("Deleting camera view")
-            appDelegate.deleteCameraPreview()
+            self.appDelegate?.deleteCameraPreview()
         }
     }
 }

@@ -33,8 +33,8 @@ struct PreviewView: View {
                 PreviewHoverView().zIndex(1)
             }
             
-            if screenshot != nil {
-                Image(screenshot!, scale: 1, label: Text(""))
+            if screenshotImage != nil {
+                Image(screenshotImage!, scale: 1, label: Text(""))
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             }

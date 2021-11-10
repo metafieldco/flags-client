@@ -21,8 +21,8 @@ class MicManager: ObservableObject {
     
     @Published var isGranted = false {
         didSet{
-            DispatchQueue.main.async {
-                if !self.isGranted && self.enabled{
+            if !self.isGranted && self.enabled{
+                DispatchQueue.main.async {
                     self.enabled = false
                 }
             }

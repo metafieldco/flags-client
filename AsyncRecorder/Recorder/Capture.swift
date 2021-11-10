@@ -10,20 +10,24 @@ import AVFoundation
 import SwiftUI
 
 class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
+    weak private var recordingManager: RecordingManager?
+    private var micManager: MicManager
+    
     private var captureSession: AVCaptureSession
     private var videoCaptureOutputDevice: AVCaptureVideoDataOutput
     private var audioCaptureOutputDevice: AVCaptureAudioDataOutput
     private var offsetTime: CMTime
     private var upload: Upload
-    private var recordingManager: RecordingManager
-    private var micManager: MicManager
+    private var supabase: Supabase
+    private var videoUUID = UUID().uuidString.lowercased()
     
-    init(recordingManager: RecordingManager, micManager: MicManager) {
+    init(recordingManager: RecordingManager?, micManager: MicManager) {
         self.captureSession = AVCaptureSession()
         self.videoCaptureOutputDevice = AVCaptureVideoDataOutput()
         self.audioCaptureOutputDevice = AVCaptureAudioDataOutput()
         self.offsetTime = startTimeOffset
-        self.upload = Upload(recordingManager: recordingManager)
+        self.supabase = Supabase()
+        self.upload = Upload(recordingManager: recordingManager, supabase: supabase, videoUUID: videoUUID)
         self.recordingManager = recordingManager
         self.micManager = micManager
         
@@ -33,6 +37,7 @@ class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapture
     func setup() throws {
         do {
             try upload.setup()
+            try supabase.setup()
         }catch {
             throw error
         }
@@ -77,7 +82,29 @@ class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapture
     
     func start() {
         captureSession.startRunning()
-        takeScreenshot()
+        
+        Screenshot().capture()
+        
+        // whilst we are starting the session, upload the initial video record on a lower priority background thread
+        DispatchQueue.global(qos: .utility).async {
+            do {
+                try self.supabase.insertVideoRecord(uuid: self.videoUUID) { [weak self] result in
+                    switch result {
+                    case .success(_):
+                        print("Successfully inserted video record.")
+                    case .failure(let error):
+                        self?.stop()
+                        relay(self?.recordingManager, newState: .error)
+                        print("Failed to insert video record for video: \(error.localizedDescription)")
+                    }
+                    return
+                }
+            }catch{
+                self.stop()
+                relay(self.recordingManager, newState: .error)
+                print("Runtime error when inserting video record for video: \(error.localizedDescription)")
+            }
+        }
     }
     
     func stop(_ cleanup: Bool = false){

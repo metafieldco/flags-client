@@ -25,37 +25,28 @@ class RecordingManager: ObservableObject {
             }
             switch state {
             case .recording:
-                print("Recording status changed to recording. Close popup")
-                DispatchQueue.main.async {
-                    self.delegate.closePopover(self)
-                }
+                self.delegate?.closePopover(self)
+                self.delegate?.showCountdownWindow()
+                toggleDesktop(hide: true)
             case .error:
-                print("Recording status changed to error. Removing camera view and showing popup.")
-                DispatchQueue.main.async {
-                    self.delegate.deleteCameraPreview()
-                    self.delegate.showPopover(self)
-                }
+                self.delegate?.deleteCameraPreview()
+                self.delegate?.showPopover(self)
             case .stopped:
                 // TODO: won't need this case once we change how error's are shown
-                print("Recording status changed to stopped. We can go again.")
-                DispatchQueue.main.async {
-                    self.delegate.closePopover(self)
-                    self.delegate.refreshPopover()
-                }
+                self.delegate?.closePopover(self)
+                self.delegate?.refreshPopover()
             case let .finished(url, videoID):
-                print("Recording status changed to finished. Closing camera view and showing preview view.")
-                self.delegate.showPreviewWindow(url: url, videoID: videoID)
-                DispatchQueue.main.async {
-                    self.delegate.deleteCameraPreview()
-                    toggleDesktop(hide: false)
-                }
+                self.delegate?.showPreviewWindow(url: url, videoID: videoID)
+                self.delegate?.deleteCameraPreview()
+                toggleDesktop(hide: false)
             }
         }
     }
     
-    var delegate: AppDelegate
-    var capture: Capture!
-    var timer: Timer?
+    weak private var delegate: AppDelegate?
+    private var capture: Capture!
+    private var timer: Timer?
+    private var isSetupError = false
     
     init(micManager: MicManager, delegate: AppDelegate){
         self.delegate = delegate
@@ -67,23 +58,23 @@ class RecordingManager: ObservableObject {
             do {
                 try self.capture.setup()
             }catch{
+                self.isSetupError = true
                 print(error)
                 self.state = .error
             }
         }
         
-        toggleDesktop(hide: true)
-        
         state = .recording
         
-        delegate.showCountdownWindow()
-        
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true){ _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true){ [weak self] _ in
+            guard let self = self, !self.isSetupError else { return }
             if self.countdown > 1 {
                 self.countdown -= 1
             }else {
                 self.timer!.invalidate()
-                self.delegate.deleteCountdownWindow()
+                
+                self.delegate?.deleteCountdownWindow()
+                
                 DispatchQueue.global(qos: .userInitiated).async {
                     self.capture.start()
                 }
@@ -98,7 +89,10 @@ class RecordingManager: ObservableObject {
 }
 
 // Updating a SwiftUI state variable from swift
-func relay(_ object: RecordingManager, newState: RecordingState) {
+func relay(_ object: RecordingManager?, newState: RecordingState) {
+    guard let object = object else {
+        return
+    }
     DispatchQueue.main.async {
         object.state = newState
     }

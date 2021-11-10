@@ -18,7 +18,7 @@ struct AsyncRecorderApp: App {
     }
 }
 
-class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBarItem: NSStatusItem!
     
     var popoverController: PopoverController?
@@ -113,6 +113,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     }
     
     func showPreviewWindow(url: String, videoID: String){
+        // Without the delay the animation doesn't work properly - might be because initilalising with the thumbnail is intensive (500kb)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25){
             let previewWindowController = PreviewWindowController(url: url, videoID: videoID)
             previewWindowController.showWindow(nil)

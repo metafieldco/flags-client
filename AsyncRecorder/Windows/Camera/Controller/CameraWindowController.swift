@@ -51,7 +51,9 @@ class CameraWindowController: NSWindowController, NSWindowDelegate{
     }
     
     func windowWillClose(_ notification: Notification) {
-        self.window?.contentView = nil
+        DispatchQueue.main.async {
+            self.window?.contentView = nil
+        }
     }
     
     func resize(lastSize: CameraSize){
@@ -65,12 +67,16 @@ class CameraWindowController: NSWindowController, NSWindowDelegate{
             frame.size = NSSize(width: size.width, height: size.height)
             
             if lastSize == .fullScreen {
-                window.setFrame(frame, display: true)
-                if let lastOrigin = lastOrigin {
-                    window.setFrameOrigin(lastOrigin)
+                DispatchQueue.main.async {
+                    window.setFrame(frame, display: true)
+                    if let lastOrigin = self.lastOrigin {
+                        window.setFrameOrigin(lastOrigin)
+                    }
                 }
             }else{
-                window.setFrame(frame, display: true, animate: true)
+                DispatchQueue.main.async {
+                    window.setFrame(frame, display: true, animate: true)
+                }
             }
         case .fullScreen:
             lastOrigin = window.frame.origin // save current origin to go back to
@@ -78,7 +84,9 @@ class CameraWindowController: NSWindowController, NSWindowDelegate{
             guard let screen = window.screen ?? NSScreen.main else {
                 return
             }
-            window.setFrame(screen.frame, display: true)
+            DispatchQueue.main.async {
+                window.setFrame(screen.frame, display: true)
+            }
         }
         
         // Delete cam size in user defaults

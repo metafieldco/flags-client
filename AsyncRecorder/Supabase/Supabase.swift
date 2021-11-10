@@ -13,6 +13,16 @@ class Supabase: NSObject {
     private var supabaseTableUrl: URL?
     private var supabaseServiceRoleKey: String?
     
+    private let videoBucket = "videos"
+    private let thumbnailBucket = "thumbnails"
+    private let temporaryDirectoryUrl = URL(fileURLWithPath: NSTemporaryDirectory(),
+                                                isDirectory: true)
+    
+    enum Bucket: String {
+        case videos = "videos"
+        case thumbnails = "thumbnails"
+    }
+    
     func setup() throws {
         guard let storageUrlString = Bundle.main.object(forInfoDictionaryKey: "SUPABASE_STORAGE_URL") as? String, !storageUrlString.isEmpty else {
             throw RuntimeError("SUPABASE_STORAGE_URL not found in the environment.")
@@ -54,7 +64,7 @@ class Supabase: NSObject {
         }
     }
     
-    func uploadFile(bucket: String, uuid: String, filename: String, data: Data?, finish: @escaping (Result<FileUploadSuccess, SupabaseError>) -> Void) throws {
+    func uploadFile(bucket: Bucket, uuid: String, filename: String, data: Data?, finish: @escaping (Result<FileUploadSuccess, SupabaseError>) -> Void) throws {
         let temporaryFileURL =
         temporaryDirectoryUrl.appendingPathComponent(filename)
         
@@ -72,7 +82,7 @@ class Supabase: NSObject {
         guard supabaseStorageUrl != nil else {
             throw RuntimeError("Supabase storage url is nil.")
         }
-        let url = supabaseStorageUrl!.appendingPathComponent(bucket).appendingPathComponent(uuid).appendingPathComponent(filename)
+        let url = supabaseStorageUrl!.appendingPathComponent(bucket.rawValue).appendingPathComponent(uuid).appendingPathComponent(filename)
         
         var request = URLRequest(url: url,
                                  cachePolicy: .reloadIgnoringLocalCacheData,

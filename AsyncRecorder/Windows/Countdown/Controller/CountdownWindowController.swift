@@ -38,6 +38,8 @@ class CountdownWindowController: NSWindowController, NSWindowDelegate{
     }
     
     func windowWillClose(_ notification: Notification) {
-        self.window?.contentView = nil
+        DispatchQueue.main.async {
+            self.window?.contentView = nil
+        }
     }
 }

@@ -10,7 +10,7 @@ import AppKit
 import AVFoundation
 
 class CamManager: ObservableObject {
-    private var delegate: AppDelegate
+    weak private var delegate: AppDelegate?
     
     init(_ delegate: AppDelegate){
         self.delegate = delegate
@@ -23,7 +23,7 @@ class CamManager: ObservableObject {
             if old == size {
                 return
             }
-            delegate.updateCameraSize(lastSize: old)
+            delegate?.updateCameraSize(lastSize: old)
         }
     }
     
@@ -35,9 +35,9 @@ class CamManager: ObservableObject {
             }
             
             if self.enabled {
-                self.delegate.showCameraPreview()
+                self.delegate?.showCameraPreview()
             }else {
-                self.delegate.deleteCameraPreview()
+                self.delegate?.deleteCameraPreview()
             }
         }
     }
@@ -45,7 +45,7 @@ class CamManager: ObservableObject {
     @Published var isGranted = false {
         didSet{
             if self.isGranted {
-                self.delegate.showCameraPreview()
+                self.delegate?.showCameraPreview()
             }else if self.enabled{
                 self.enabled = false
             }
