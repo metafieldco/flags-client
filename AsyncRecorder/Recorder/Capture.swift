@@ -93,14 +93,14 @@ class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapture
                     case .success(_):
                         print("Successfully inserted video record.")
                     case .failure(let error):
-                        self?.stop()
+                        self?.captureSession.stopRunning()
                         relay(self?.recordingManager, newState: .error)
                         print("Failed to insert video record for video: \(error.localizedDescription)")
                     }
                     return
                 }
             }catch{
-                self.stop()
+                self.captureSession.stopRunning()
                 relay(self.recordingManager, newState: .error)
                 print("Runtime error when inserting video record for video: \(error.localizedDescription)")
             }
