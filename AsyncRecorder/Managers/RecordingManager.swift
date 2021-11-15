@@ -61,11 +61,16 @@ class RecordingManager: ObservableObject {
             }catch{
                 self.isSetupError = true
                 print(error)
-                self.state = .error
+                
+                DispatchQueue.main.async {
+                    self.state = .error
+                }
             }
         }
         
-        state = .recording
+        DispatchQueue.main.async {
+            self.state = .recording
+        }
         
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true){ [weak self] _ in
             guard let self = self, !self.isSetupError else { return }
