@@ -32,9 +32,9 @@ struct SupabaseSession {
         }
     }
 
-    static var userID: String? {
+    static var userID: String {
       get {
-        UserDefaults.standard.string(forKey: userIDKey)
+        UserDefaults.standard.string(forKey: userIDKey) ?? ""
       }
       set {
         UserDefaults.standard.setValue(newValue, forKey: userIDKey)
@@ -49,10 +49,10 @@ struct Token: Codable {
     
     var expires_at: Date? // populated after decoding by decoding the JWT as gotrue doesn't return it
     
-    func isValid() -> Bool {
+    func isValid(date: Date = Date()) -> Bool {
         guard let expires_at = expires_at else {
             return false
         }
-        return Date() < expires_at
+        return date < expires_at
     }
 }

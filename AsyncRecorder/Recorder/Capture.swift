@@ -37,7 +37,6 @@ class Capture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapture
     func setup() throws {
         do {
             try upload.setup()
-            try supabase.setup()
         }catch {
             throw error
         }

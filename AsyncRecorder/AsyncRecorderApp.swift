@@ -77,6 +77,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 return
             }
             popoverController?.show(button: button)
+            authManager?.refreshToken()
         }
     }
 

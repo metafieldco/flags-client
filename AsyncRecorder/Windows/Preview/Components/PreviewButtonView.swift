@@ -18,13 +18,7 @@ struct PreviewButtonView: View {
         VStack{
             HStack{
                 PreviewImageButton(image: "xmark.bin.fill", action: {
-                    let supabase = Supabase()
-                    do {
-                        try supabase.setup()
-                        supabase.cleanup(uuid: videoID)
-                    }catch{
-                        print("Error when recycling files: \(error.localizedDescription) for id: \(videoID). Not showing to the user.")
-                    }
+                    Supabase().cleanup(uuid: videoID)
                     withAnimation{
                         previewManager.state = .deleted
                     }
