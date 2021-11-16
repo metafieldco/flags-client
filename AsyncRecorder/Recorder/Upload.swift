@@ -19,7 +19,7 @@ class Upload: NSObject, AVAssetWriterDelegate {
     
     weak private var recordingManager: RecordingManager?
     private var supabase: Supabase
-    private var webAppVideoUrl: URL?
+    private var webAppVideoUrl: URL
     private lazy var playlistState = IndexFileState()
     private lazy var segmentIndex = 0
     private let videoUUID: String
@@ -39,18 +39,12 @@ class Upload: NSObject, AVAssetWriterDelegate {
         self.supabase = supabase
         self.videoUUID = videoUUID
         
+        self.webAppVideoUrl = URL(string: Bundle.main.object(forInfoDictionaryKey: "WEB_APP_URL") as! String)!.appendingPathComponent("v")
+        
         super.init()
     }
     
     func setup() throws {
-        guard let tmp = Bundle.main.object(forInfoDictionaryKey: "WEB_APP_VIDEO_URL") as? String, !tmp.isEmpty else {
-            throw RuntimeError("WEB_APP_VIDEO_URL not found in the environment.")
-        }
-        guard let url = URL(string: tmp) else {
-            throw RuntimeError("WEB_APP_VIDEO_URL not a valid URL")
-        }
-        webAppVideoUrl = url
-        
         if !assetWriter.canAdd(audioWriterInput) { throw RuntimeError("Can't add audio writer input to AssetWriter") }
         if !assetWriter.canAdd(videoWriterInput) { throw RuntimeError("Can't add video writer input to AssetWriter") }
         assetWriter.add(audioWriterInput)
@@ -123,14 +117,15 @@ class Upload: NSObject, AVAssetWriterDelegate {
     
     private func uploadSegmentFile(_ segment: Segment, _ segmentFileName: String){
         do {
-            try self.supabase.uploadFile(bucket: .videos, uuid: videoUUID, filename: segmentFileName, data: segment.data){ [weak self] result in
+            try self.supabase.uploadVideoFile(uuid: videoUUID, filename: segmentFileName, data: segment.data){ [weak self] result in
+                guard let self = self else { return }
                 switch result {
-                case .success(let resp):
-                    print("Successfuly uploaded segment to s3: \(resp.key)")
+                case .success(_):
+                    print("Successfuly uploaded segment to s3: \(self.videoUUID)/\(segmentFileName)")
                 case .failure(let error):
-                    print("Error uploading segment: \(error.localisedDescription())")
-                    self?.stop(true)
-                    relay(self?.recordingManager, newState: .error)
+                    print("Error uploading segment: \(error.localizedDescription)")
+                    self.stop(true)
+                    relay(self.recordingManager, newState: .error)
                 }
             }
         }catch{
@@ -142,19 +137,19 @@ class Upload: NSObject, AVAssetWriterDelegate {
     
     private func uploadPlaylistFile(_ data: Data) {
         do {
-            try self.supabase.uploadFile(bucket: .videos, uuid: self.videoUUID, filename: indexFileName, data: data) { [weak self] result in
+            try self.supabase.uploadVideoFile(uuid: self.videoUUID, filename: indexFileName, data: data) { [weak self] result in
                 guard let self = self else { return }
                 
                 switch result {
-                case .success(let resp):
-                    print("Successfuly uploaded index file to s3: \(resp.key). Well done Archie ...")
-                    relay(self.recordingManager, newState: .finished(self.webAppVideoUrl!.appendingPathComponent(self.videoUUID).absoluteString, self.videoUUID))
+                case .success(_):
+                    print("Successfuly uploaded index file to s3: \(self.videoUUID)/\(indexFileName)")
+                    relay(self.recordingManager, newState: .finished(self.webAppVideoUrl.appendingPathComponent(self.videoUUID).absoluteString, self.videoUUID))
                     
                     do {
-                        try self.supabase.uploadFile(bucket: .thumbnails, uuid: self.videoUUID, filename: screenshotFileName, data: nil){ result in
+                        try self.supabase.uploadThumbnailFile(uuid: self.videoUUID, filename: screenshotFileName){ result in
                             switch result {
                             case .success(_):
-                                print("Successfully uploaded thumbnail.")
+                                print("Successfully uploaded thumbnail: \(self.videoUUID)/\(screenshotFileName)")
                             case .failure(let error):
                                 print("Failed to upload thumbnail for video: \(error.localizedDescription)")
                             }
@@ -164,7 +159,7 @@ class Upload: NSObject, AVAssetWriterDelegate {
                         print("Runtime error when uploading thumbnail for video: \(error.localizedDescription)")
                     }
                 case .failure(let error):
-                    print("Error uploading index file: \(error.localisedDescription())")
+                    print("Error uploading index file: \(error.localizedDescription)")
                     relay(self.recordingManager, newState: .error)
                     self.supabase.cleanup(uuid: self.videoUUID)
                 }

@@ -9,31 +9,6 @@ import Foundation
 import AppKit
 import SwiftUI
 
-enum PreviewButtonState {
-    case copied
-    case deleted
-    case editing
-    case none
-}
-
-class PreviewManager: ObservableObject {
-    
-    weak var controller: PreviewWindowController?
-    
-    init(controller: PreviewWindowController) {
-        self.controller = controller
-    }
-    
-    @Published var isHovering = false
-    @Published var state: PreviewButtonState = .none {
-        didSet {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
-                self.controller?.close()
-            }
-        }
-    }
-}
-
 class PreviewWindowController: NSWindowController, NSWindowDelegate {
     
     var previewManager: PreviewManager?

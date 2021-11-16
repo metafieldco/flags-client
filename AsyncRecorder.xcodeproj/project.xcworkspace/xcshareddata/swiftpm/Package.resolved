@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "JWTDecode",
+        "repositoryURL": "https://github.com/auth0/JWTDecode.swift.git",
+        "state": {
+          "branch": "master",
+          "revision": "207dd17f873616dc867d0c62bb88b446901e5d6a",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

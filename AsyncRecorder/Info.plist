@@ -4,13 +4,15 @@
 <dict>
 	<key>LSUIElement</key>
 	<true/>
-	<key>SUPABASE_SERVICE_ROLE_KEY</key>
-	<string>$(SUPABASE_SERVICE_ROLE_KEY)</string>
+	<key>SUPABASE_ANON_KEY</key>
+	<string>$(SUPABASE_ANON_KEY)</string>
 	<key>SUPABASE_STORAGE_URL</key>
 	<string>https://${SUPABASE_STORAGE_URL}</string>
 	<key>SUPABASE_TABLE_URL</key>
 	<string>https://${SUPABASE_TABLE_URL}</string>
-	<key>WEB_APP_VIDEO_URL</key>
-	<string>https://${WEB_APP_VIDEO_URL}</string>
+	<key>SUPABASE_TOKEN_URL</key>
+	<string>https://${SUPABASE_TOKEN_URL}</string>
+	<key>WEB_APP_URL</key>
+	<string>http://${WEB_APP_URL}</string>
 </dict>
 </plist>

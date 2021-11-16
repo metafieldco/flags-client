@@ -24,10 +24,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var popoverController: PopoverController?
     var countdownWindowController: CountdownWindowController?
     var camWindowController: CameraWindowController?
+    var authWindowController: AuthWindowController?
     
     var micManager: MicManager?
     var camManager: CamManager?
     var recordingManager: RecordingManager?
+    var authManager: AuthManager?
 
     override class func awakeFromNib() {}
     
@@ -35,6 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print("Application launching")
         
         NSApplication.shared.delegate = self
+        NSApplication.shared.activate(ignoringOtherApps: true)
         
         statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusBarItem?.button, let itemImage = NSImage(named:NSImage.Name("StatusBarButtonImage")), itemImage.isTemplate {
@@ -44,13 +47,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         micManager = MicManager()
         camManager = CamManager(self)
+        authManager = AuthManager(self)
         recordingManager = RecordingManager(micManager: micManager!, delegate: self)
+        
+        if authManager?.state == .unauthenticated {
+            showAuthWindow()
+        }
     }
     
     @objc func togglePopover(_ sender: Any?) {
         if popoverController != nil && popoverController!.isShown {
             closePopover(sender)
-        } else {
+        } else if authManager?.state == .authenticated {
             showPopover(sender)
         }
     }
@@ -69,6 +77,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 return
             }
             popoverController?.show(button: button)
+            authManager?.refreshToken()
         }
     }
 
@@ -118,5 +127,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let previewWindowController = PreviewWindowController(url: url, videoID: videoID)
             previewWindowController.showWindow(nil)
         }
+    }
+    
+    func showAuthWindow(){
+        guard let authManager = authManager else {
+            return
+        }
+        authWindowController = AuthWindowController(manager: authManager)
+        authWindowController?.showWindow(self)
+    }
+    
+    func deleteAuthWindow(){
+        authWindowController?.close()
     }
 }

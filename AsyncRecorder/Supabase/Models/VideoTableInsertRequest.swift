@@ -9,8 +9,19 @@ import Foundation
 
 struct VideoTableInsertRequest: Codable {
     let videoID: String
-    let title = "I love Archie"
-    let profileID = "0fbbf933-1f8a-4d0d-bbf1-ce086a61689b"
+    let title: String
+    let profileID: String
+    
+    init(videoID: String, profileID: String) {
+        self.videoID = videoID
+        self.profileID = profileID
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .short
+        dateFormatter.locale = Locale.current
+        self.title = "Screen recording - \(dateFormatter.string(from: Date()))"
+    }
     
     private enum CodingKeys : String, CodingKey {
         case videoID = "video_id"
