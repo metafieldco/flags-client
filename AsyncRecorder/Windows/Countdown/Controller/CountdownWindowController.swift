@@ -25,7 +25,7 @@ class CountdownWindowController: NSWindowController, NSWindowDelegate{
         window.makeKeyAndOrderFront(nil)
         window.level = .floating
         window.backgroundColor = .clear
-        window.isMovable = true
+        window.isMovable = false
         window.isMovableByWindowBackground = true
         window.collectionBehavior = .canJoinAllSpaces
 

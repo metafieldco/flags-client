@@ -40,11 +40,12 @@
 		217E70BE2731D0D100F30088 /* ServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70BD2731D0D100F30088 /* ServiceError.swift */; };
 		217E70C12731D11F00F30088 /* RuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70C02731D11F00F30088 /* RuntimeError.swift */; };
 		217E70C62731DC0000F30088 /* StoppedPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70C52731DC0000F30088 /* StoppedPopupView.swift */; };
-		217E70C82731DC1400F30088 /* ErrorPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70C72731DC1400F30088 /* ErrorPopupView.swift */; };
 		2182FFA3273401FC005AA7AA /* CameraSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182FFA2273401FC005AA7AA /* CameraSize.swift */; };
 		2182FFA627353B07005AA7AA /* CameraSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182FFA527353B07005AA7AA /* CameraSettingsView.swift */; };
 		2182FFA827353E2E005AA7AA /* CameraSizeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182FFA727353E2E005AA7AA /* CameraSizeButton.swift */; };
 		218D9B752743C14300CCCCEF /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = 218D9B742743C14300CCCCEF /* JWTDecode */; };
+		218D9B792743E78200CCCCEF /* ErrorWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218D9B782743E78200CCCCEF /* ErrorWindowController.swift */; };
+		218D9B7B2743E7A400CCCCEF /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218D9B7A2743E7A400CCCCEF /* ErrorView.swift */; };
 		219A71DD273ACE3000C5AF2F /* PreviewButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A71DC273ACE3000C5AF2F /* PreviewButtonView.swift */; };
 		219A71DF273ADB8B00C5AF2F /* PreviewFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A71DE273ADB8B00C5AF2F /* PreviewFeedbackView.swift */; };
 		219A71E1273AF74200C5AF2F /* Screenshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A71E0273AF74200C5AF2F /* Screenshot.swift */; };
@@ -94,11 +95,12 @@
 		217E70BD2731D0D100F30088 /* ServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceError.swift; sourceTree = "<group>"; };
 		217E70C02731D11F00F30088 /* RuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeError.swift; sourceTree = "<group>"; };
 		217E70C52731DC0000F30088 /* StoppedPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoppedPopupView.swift; sourceTree = "<group>"; };
-		217E70C72731DC1400F30088 /* ErrorPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPopupView.swift; sourceTree = "<group>"; };
 		217E70C92731EA2100F30088 /* secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.xcconfig; sourceTree = "<group>"; };
 		2182FFA2273401FC005AA7AA /* CameraSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSize.swift; sourceTree = "<group>"; };
 		2182FFA527353B07005AA7AA /* CameraSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSettingsView.swift; sourceTree = "<group>"; };
 		2182FFA727353E2E005AA7AA /* CameraSizeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSizeButton.swift; sourceTree = "<group>"; };
+		218D9B782743E78200CCCCEF /* ErrorWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorWindowController.swift; sourceTree = "<group>"; };
+		218D9B7A2743E7A400CCCCEF /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		219A71DC273ACE3000C5AF2F /* PreviewButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewButtonView.swift; sourceTree = "<group>"; };
 		219A71DE273ADB8B00C5AF2F /* PreviewFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewFeedbackView.swift; sourceTree = "<group>"; };
 		219A71E0273AF74200C5AF2F /* Screenshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screenshot.swift; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 		212EDCE3273AA90600629D49 /* Windows */ = {
 			isa = PBXGroup;
 			children = (
+				218D9B762743E75900CCCCEF /* Error */,
 				2147C3192743085C00293757 /* Auth */,
 				212EDCE4273AA96400629D49 /* Utils */,
 				217E70C42731DBC700F30088 /* Popup */,
@@ -327,7 +330,7 @@
 				212EDCE5273AA98C00629D49 /* Controller */,
 				2126547D27359E0400E1BDD4 /* Components */,
 				217E70C52731DC0000F30088 /* StoppedPopupView.swift */,
-				217E70C72731DC1400F30088 /* ErrorPopupView.swift */,
+				219C521A27315BC6007B6B36 /* PopupView.swift */,
 			);
 			path = Popup;
 			sourceTree = "<group>";
@@ -347,6 +350,23 @@
 				2182FFA727353E2E005AA7AA /* CameraSizeButton.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		218D9B762743E75900CCCCEF /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				218D9B772743E77200CCCCEF /* Controller */,
+				218D9B7A2743E7A400CCCCEF /* ErrorView.swift */,
+			);
+			path = Error;
+			sourceTree = "<group>";
+		};
+		218D9B772743E77200CCCCEF /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				218D9B782743E78200CCCCEF /* ErrorWindowController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		219C520C27315BC6007B6B36 = {
@@ -375,7 +395,6 @@
 				217E70A92731CF6800F30088 /* Recorder */,
 				219C52272731622A007B6B36 /* Info.plist */,
 				219C521827315BC6007B6B36 /* AsyncRecorderApp.swift */,
-				219C521A27315BC6007B6B36 /* PopupView.swift */,
 				219C521C27315BCB007B6B36 /* Assets.xcassets */,
 				219C522127315BCB007B6B36 /* AsyncRecorder.entitlements */,
 				219C521E27315BCB007B6B36 /* Preview Content */,
@@ -506,9 +525,11 @@
 				2147C32C2743191500293757 /* NetworkRequest.swift in Sources */,
 				212EDCD22739706A00629D49 /* PopoverController.swift in Sources */,
 				217E70B22731CFDC00F30088 /* PlaylistGeneration.swift in Sources */,
+				218D9B7B2743E7A400CCCCEF /* ErrorView.swift in Sources */,
 				217E70B82731D08D00F30088 /* Supabase.swift in Sources */,
 				2126548627368B5C00E1BDD4 /* PopupContainerView.swift in Sources */,
 				219C523127317670007B6B36 /* CamManager.swift in Sources */,
+				218D9B792743E78200CCCCEF /* ErrorWindowController.swift in Sources */,
 				2126547C2735858D00E1BDD4 /* AnyShape.swift in Sources */,
 				2126547F27359E1600E1BDD4 /* DeviceToggle.swift in Sources */,
 				212EDCD52739A03E00629D49 /* InvisibleDesktop.swift in Sources */,
@@ -522,7 +543,6 @@
 				212EDCE1273AA83400629D49 /* PreviewDetailedButton.swift in Sources */,
 				2147C3272743148900293757 /* RefreshRequest.swift in Sources */,
 				219C523327319B50007B6B36 /* MicManager.swift in Sources */,
-				217E70C82731DC1400F30088 /* ErrorPopupView.swift in Sources */,
 				219C522E27316AF5007B6B36 /* CameraContainerView.swift in Sources */,
 				219C522A27316A70007B6B36 /* CameraPreviewView.swift in Sources */,
 				212EDCEA273AAB4F00629D49 /* PreviewHoverView.swift in Sources */,

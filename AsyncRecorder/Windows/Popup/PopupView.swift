@@ -8,17 +8,9 @@
 import SwiftUI
 
 struct PopupView: View {
-    @EnvironmentObject var recordingManager: RecordingManager
-    
     var body: some View {
         VStack(){
-            switch recordingManager.state {
-            case .stopped, .recording, .finished(_,_):
-                StoppedPopupView()
-            case .error:
-                ErrorPopupView()
-            }
-            
+            StoppedPopupView()
         }
         .frame(width: 250)
         .padding()

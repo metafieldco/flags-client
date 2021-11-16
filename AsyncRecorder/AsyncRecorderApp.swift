@@ -32,7 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var authManager: AuthManager?
 
     override class func awakeFromNib() {}
-    
+        
     func applicationDidFinishLaunching(_ notification: Notification) {
         print("Application launching")
         
@@ -122,7 +122,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func showPreviewWindow(url: String, videoID: String){
-        // Without the delay the animation doesn't work properly - might be because initilalising with the thumbnail is intensive (500kb)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25){
             let previewWindowController = PreviewWindowController(url: url, videoID: videoID)
             previewWindowController.showWindow(nil)
@@ -139,5 +138,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func deleteAuthWindow(){
         authWindowController?.close()
+    }
+    
+    func showErrorWindow(){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25){
+            let errorWindowController = ErrorWindowController()
+            errorWindowController.showWindow(self)
+        }
     }
 }

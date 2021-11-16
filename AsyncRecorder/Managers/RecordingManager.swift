@@ -30,16 +30,16 @@ class RecordingManager: ObservableObject {
                 toggleDesktop(hide: true)
             case .error:
                 self.delegate?.deleteCameraPreview()
-                self.delegate?.showPopover(self)
-            case .stopped:
-                // TODO: won't need this case once we change how error's are shown
-                self.delegate?.closePopover(self)
+                self.delegate?.showErrorWindow()
+                toggleDesktop(hide: false)
                 self.delegate?.refreshPopover()
             case let .finished(url, videoID):
                 self.delegate?.showPreviewWindow(url: url, videoID: videoID)
                 self.delegate?.deleteCameraPreview()
                 toggleDesktop(hide: false)
                 self.delegate?.refreshPopover()
+            default:
+                return
             }
         }
     }
