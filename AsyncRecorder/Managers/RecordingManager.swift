@@ -25,7 +25,7 @@ class RecordingManager: ObservableObject {
             }
             switch state {
             case .recording:
-                self.delegate?.closePopover(self)
+                self.delegate?.closePopover()
                 self.delegate?.showCountdownWindow()
                 toggleDesktop(hide: true)
             case .error:

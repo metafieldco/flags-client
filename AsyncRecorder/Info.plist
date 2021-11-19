@@ -13,6 +13,6 @@
 	<key>SUPABASE_TOKEN_URL</key>
 	<string>https://${SUPABASE_TOKEN_URL}</string>
 	<key>WEB_APP_URL</key>
-	<string>http://${WEB_APP_URL}</string>
+	<string>https://${WEB_APP_URL}</string>
 </dict>
 </plist>

@@ -26,6 +26,7 @@ struct ButtonView: View {
             .cornerRadius(4)
         })
         .buttonStyle(PlainButtonStyle())
+        .padding(12)
     }
 }
 

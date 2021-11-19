@@ -43,8 +43,9 @@ class PopoverController: NSObject, NSPopoverDelegate {
         self.recordingManager = recordingManager
         
         let popupVc = NSViewController()
-        let popupView = PopupView()
-        popupVc.view = NSHostingView(rootView: popupView.environmentObject(micManager).environmentObject(camManager).environmentObject(recordingManager))
+//        let popupView = PopupView()
+//        popupVc.view = NSHostingView(rootView: popupView.environmentObject(micManager).environmentObject(camManager).environmentObject(recordingManager))
+        popupVc.view = NSHostingView(rootView: PopoverView())
         
         popover.contentViewController = popupVc
     }

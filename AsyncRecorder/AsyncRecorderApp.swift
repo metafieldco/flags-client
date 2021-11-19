@@ -42,7 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusBarItem?.button, let itemImage = NSImage(named:NSImage.Name("StatusBarButtonImage")), itemImage.isTemplate {
             button.image = itemImage
-            button.action = #selector(togglePopover(_:))
+            button.action = #selector(togglePopover)
         }
         
         micManager = MicManager()
@@ -53,17 +53,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if authManager?.state == .unauthenticated {
             showAuthWindow()
         }
+        
+        print(micManager?.devices)
+        print(camManager?.devices)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshDevices), name: NSNotification.Name.AVCaptureDeviceWasConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshDevices), name: NSNotification.Name.AVCaptureDeviceWasDisconnected, object: nil)
     }
     
-    @objc func togglePopover(_ sender: Any?) {
+    @objc func togglePopover() {
         if popoverController != nil && popoverController!.isShown {
-            closePopover(sender)
+            closePopover()
         } else if authManager?.state == .authenticated {
-            showPopover(sender)
+            showPopover()
         }
     }
+    
+    @objc func refreshDevices() {
+        micManager?.getDevices()
+        camManager?.getDevices()
+    }
 
-    func showPopover(_ sender: Any?) {
+    func showPopover() {
         if popoverController == nil {
             guard let micManager = micManager, let camManager = camManager, let recordingManager = recordingManager else {
                 return
@@ -81,7 +92,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    func closePopover(_ sender: Any?) {
+    func closePopover() {
         popoverController?.close()
     }
     

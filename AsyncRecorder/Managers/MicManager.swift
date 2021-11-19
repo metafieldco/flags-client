@@ -8,8 +8,10 @@
 import Foundation
 import AppKit
 import AVFoundation
+import UserNotifications
 
 class MicManager: ObservableObject {
+    
     @Published var enabled = false {
         didSet {
             if enabled && !isGranted {
@@ -26,6 +28,15 @@ class MicManager: ObservableObject {
                     self.enabled = false
                 }
             }
+        }
+    }
+    
+    @Published var devices = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInMicrophone, .externalUnknown], mediaType: .audio, position: .unspecified).devices
+    
+    func getDevices(){
+        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInMicrophone, .externalUnknown], mediaType: .audio, position: .unspecified)
+        DispatchQueue.main.async {
+            self.devices = discoverySession.devices
         }
     }
     

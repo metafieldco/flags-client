@@ -19,6 +19,7 @@ struct DeviceToggle: View {
         })
             .frame(maxWidth: .infinity)
             .toggleStyle(SwitchToggleStyle(tint: .blue))
+            .padding(12)
     }
 }
 

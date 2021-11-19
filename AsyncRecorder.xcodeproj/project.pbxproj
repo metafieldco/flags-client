@@ -31,6 +31,8 @@
 		2147C325274309BA00293757 /* SupabaseSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2147C324274309BA00293757 /* SupabaseSession.swift */; };
 		2147C3272743148900293757 /* RefreshRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2147C3262743148900293757 /* RefreshRequest.swift */; };
 		2147C32C2743191500293757 /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2147C32B2743191500293757 /* NetworkRequest.swift */; };
+		2151F987274512B0006B9227 /* ControlMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2151F986274512B0006B9227 /* ControlMenu.swift */; };
+		2151F989274520A8006B9227 /* PopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2151F988274520A8006B9227 /* PopoverView.swift */; };
 		217E70AB2731CF9500F30088 /* Capture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AA2731CF9500F30088 /* Capture.swift */; };
 		217E70AD2731CF9E00F30088 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AC2731CF9E00F30088 /* Upload.swift */; };
 		217E70B02731CFB700F30088 /* RecorderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AF2731CFB700F30088 /* RecorderConfiguration.swift */; };
@@ -39,7 +41,6 @@
 		217E70B82731D08D00F30088 /* Supabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70B72731D08D00F30088 /* Supabase.swift */; };
 		217E70BE2731D0D100F30088 /* ServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70BD2731D0D100F30088 /* ServiceError.swift */; };
 		217E70C12731D11F00F30088 /* RuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70C02731D11F00F30088 /* RuntimeError.swift */; };
-		217E70C62731DC0000F30088 /* StoppedPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70C52731DC0000F30088 /* StoppedPopupView.swift */; };
 		2182FFA3273401FC005AA7AA /* CameraSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182FFA2273401FC005AA7AA /* CameraSize.swift */; };
 		2182FFA627353B07005AA7AA /* CameraSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182FFA527353B07005AA7AA /* CameraSettingsView.swift */; };
 		2182FFA827353E2E005AA7AA /* CameraSizeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182FFA727353E2E005AA7AA /* CameraSizeButton.swift */; };
@@ -86,6 +87,8 @@
 		2147C324274309BA00293757 /* SupabaseSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseSession.swift; sourceTree = "<group>"; };
 		2147C3262743148900293757 /* RefreshRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshRequest.swift; sourceTree = "<group>"; };
 		2147C32B2743191500293757 /* NetworkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequest.swift; sourceTree = "<group>"; };
+		2151F986274512B0006B9227 /* ControlMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlMenu.swift; sourceTree = "<group>"; };
+		2151F988274520A8006B9227 /* PopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverView.swift; sourceTree = "<group>"; };
 		217E70AA2731CF9500F30088 /* Capture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Capture.swift; sourceTree = "<group>"; };
 		217E70AC2731CF9E00F30088 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		217E70AF2731CFB700F30088 /* RecorderConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderConfiguration.swift; sourceTree = "<group>"; };
@@ -94,7 +97,6 @@
 		217E70B72731D08D00F30088 /* Supabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supabase.swift; sourceTree = "<group>"; };
 		217E70BD2731D0D100F30088 /* ServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceError.swift; sourceTree = "<group>"; };
 		217E70C02731D11F00F30088 /* RuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeError.swift; sourceTree = "<group>"; };
-		217E70C52731DC0000F30088 /* StoppedPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoppedPopupView.swift; sourceTree = "<group>"; };
 		217E70C92731EA2100F30088 /* secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.xcconfig; sourceTree = "<group>"; };
 		2182FFA2273401FC005AA7AA /* CameraSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSize.swift; sourceTree = "<group>"; };
 		2182FFA527353B07005AA7AA /* CameraSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSettingsView.swift; sourceTree = "<group>"; };
@@ -272,6 +274,14 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		2151F9852745129E006B9227 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				2151F986274512B0006B9227 /* ControlMenu.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
 		217E70A92731CF6800F30088 /* Recorder */ = {
 			isa = PBXGroup;
 			children = (
@@ -329,8 +339,8 @@
 			children = (
 				212EDCE5273AA98C00629D49 /* Controller */,
 				2126547D27359E0400E1BDD4 /* Components */,
-				217E70C52731DC0000F30088 /* StoppedPopupView.swift */,
 				219C521A27315BC6007B6B36 /* PopupView.swift */,
+				2151F988274520A8006B9227 /* PopoverView.swift */,
 			);
 			path = Popup;
 			sourceTree = "<group>";
@@ -388,6 +398,7 @@
 		219C521727315BC6007B6B36 /* AsyncRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				2151F9852745129E006B9227 /* Menu */,
 				2147C31F2743089C00293757 /* Managers */,
 				212EDCE3273AA90600629D49 /* Windows */,
 				217E70BF2731D10000F30088 /* Utils */,
@@ -514,10 +525,10 @@
 				219C522C27316AA7007B6B36 /* CameraSession.swift in Sources */,
 				212654812735A1C900E1BDD4 /* VideoTableInsertRequest.swift in Sources */,
 				2147C31C2743087D00293757 /* AuthWindowController.swift in Sources */,
+				2151F987274512B0006B9227 /* ControlMenu.swift in Sources */,
 				2182FFA627353B07005AA7AA /* CameraSettingsView.swift in Sources */,
 				219C521927315BC6007B6B36 /* AsyncRecorderApp.swift in Sources */,
 				219A71E3273BFD0000C5AF2F /* VideoTableUpdateRequest.swift in Sources */,
-				217E70C62731DC0000F30088 /* StoppedPopupView.swift in Sources */,
 				217E70AB2731CF9500F30088 /* Capture.swift in Sources */,
 				2182FFA3273401FC005AA7AA /* CameraSize.swift in Sources */,
 				212EDCCB27384A0100629D49 /* RecordingManager.swift in Sources */,
@@ -533,6 +544,7 @@
 				2126547C2735858D00E1BDD4 /* AnyShape.swift in Sources */,
 				2126547F27359E1600E1BDD4 /* DeviceToggle.swift in Sources */,
 				212EDCD52739A03E00629D49 /* InvisibleDesktop.swift in Sources */,
+				2151F989274520A8006B9227 /* PopoverView.swift in Sources */,
 				212EDCDB273AA77000629D49 /* BlurEffect.swift in Sources */,
 				212EDCDF273AA80000629D49 /* PreviewImageButton.swift in Sources */,
 				219A71DF273ADB8B00C5AF2F /* PreviewFeedbackView.swift in Sources */,

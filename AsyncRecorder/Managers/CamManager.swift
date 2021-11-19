@@ -52,6 +52,15 @@ class CamManager: ObservableObject {
         }
     }
     
+    @Published var devices = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .externalUnknown], mediaType: .video, position: .unspecified).devices
+    
+    func getDevices(){
+        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .externalUnknown], mediaType: .video, position: .unspecified)
+        DispatchQueue.main.async {
+            self.devices = discoverySession.devices
+        }
+    }
+    
     func checkAuthorization() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
             case .authorized: // The user has previously granted access to the camera.

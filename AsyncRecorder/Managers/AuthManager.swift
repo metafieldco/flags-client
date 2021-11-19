@@ -81,7 +81,7 @@ class AuthManager: NSObject, ObservableObject{
             
             DispatchQueue.main.async {
                 self?.state = .authenticated
-                self?.delegate?.showPopover(nil)
+                self?.delegate?.showPopover()
             }
         }
 

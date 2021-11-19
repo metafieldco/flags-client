@@ -10,9 +10,9 @@ import SwiftUI
 struct PopupContainerView<Content>: View where Content: View {
     @ViewBuilder var children: () -> Content
     var body: some View {
-        VStack(alignment: .leading, spacing: 16){
+        VStack(alignment: .leading, spacing: 0){
             children()
-        }
+        }.frame(width: 250)
     }
 }
 
