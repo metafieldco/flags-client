@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/archie/Projects/metafield/swift/AsyncRecorder/Flags.xcodeproj">
+      location = "self:">
    </FileRef>
 </Workspace>

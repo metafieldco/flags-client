@@ -105,7 +105,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard let camManager = camManager else {
             return
         }
-        print("showing preview")
         camWindowController = CameraWindowController(camManager: camManager)
         camWindowController!.showWindow(nil)
     }

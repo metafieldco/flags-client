@@ -20,8 +20,8 @@ class AuthManager: NSObject, ObservableObject{
     @Published var state: AuthState {
         didSet {
             if state == .authenticated {
-                // dismiss window
                 delegate?.closeAuthWindow()
+                delegate?.showPopover()
             }else if state == .unauthenticated {
                 delegate?.showAuthWindow()
             }
@@ -81,7 +81,6 @@ class AuthManager: NSObject, ObservableObject{
             
             DispatchQueue.main.async {
                 self?.state = .authenticated
-                self?.delegate?.showPopover()
             }
         }
 

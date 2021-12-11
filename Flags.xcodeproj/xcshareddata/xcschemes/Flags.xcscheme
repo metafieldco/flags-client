@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "219C521427315BC6007B6B36"
-               BuildableName = "AsyncRecorder.app"
+               BuildableName = "Flags.app"
                BlueprintName = "Flags"
                ReferencedContainer = "container:Flags.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "219C521427315BC6007B6B36"
-            BuildableName = "AsyncRecorder.app"
+            BuildableName = "Flags.app"
             BlueprintName = "Flags"
             ReferencedContainer = "container:Flags.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "219C521427315BC6007B6B36"
-            BuildableName = "AsyncRecorder.app"
+            BuildableName = "Flags.app"
             BlueprintName = "Flags"
             ReferencedContainer = "container:Flags.xcodeproj">
          </BuildableReference>
