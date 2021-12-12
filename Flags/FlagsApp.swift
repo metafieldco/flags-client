@@ -45,7 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             button.action = #selector(togglePopover)
         }
         
-        micManager = MicManager()
+        micManager = MicManager(self)
         camManager = CamManager(self)
         authManager = AuthManager(self)
         recordingManager = RecordingManager(micManager: micManager!, delegate: self)
@@ -81,6 +81,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if recordingManager?.state == .recording{
             recordingManager?.stop()
         }else{
+            if popoverController!.isShown {
+                return
+            }
             guard let button = statusBarItem?.button else {
                 return
             }

@@ -9,7 +9,7 @@ import Foundation
 
 func toggleDesktop(hide: Bool) {
     DispatchQueue.main.async {
-        let desktopUrl =  FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!
+        let desktopUrl = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!
 
         do {
             let directoryContents = try FileManager.default.contentsOfDirectory(at: desktopUrl, includingPropertiesForKeys: nil)

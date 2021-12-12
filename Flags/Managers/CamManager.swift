@@ -55,10 +55,7 @@ class CamManager: ObservableObject {
     
     @Published var isGranted = false {
         didSet{
-            if self.isGranted {
-                configureCaptureSession()
-                delegate?.showCameraPreview()
-            }else{
+            if !self.isGranted {
                 if case .device(_) = device {
                     DispatchQueue.main.async {
                         self.device = noCamera
@@ -120,13 +117,14 @@ class CamManager: ObservableObject {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
             case .authorized: // The user has previously granted access to the camera.
                 self.isGranted = true
+                configureCaptureSession()
+                delegate?.showCameraPreview()
 
             case .notDetermined: // The user has not yet been asked for camera access.
                 AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
-                    if granted {
-                        DispatchQueue.main.async {
-                            self?.isGranted = granted
-                        }
+                    DispatchQueue.main.async {
+                        self?.isGranted = granted
+                        self?.delegate?.showPopover()
                     }
                 }
 

@@ -133,22 +133,46 @@ struct PopoverView: View {
             PopoverDivider()
             
             Section{
-                Text("Camera")
-                    .foregroundColor(.secondary)
-                    .font(.callout)
-                    .fontWeight(.medium)
-                    .padding(.horizontal, 16)
+                HStack {
+                    Text("Camera")
+                        .foregroundColor(.secondary)
+                        .font(.callout)
+                        .fontWeight(.medium)
+                    Spacer()
+                    if !camManager.isGranted {
+                        Button(action: {
+                            camManager.checkAuthorization()
+                        }, label: {
+                            Text("Request Access")
+                                .foregroundColor(.secondary)
+                                .font(.callout)
+                                .fontWeight(.medium)
+                        }).buttonStyle(PlainButtonStyle())
+                    }
+                }.padding(.horizontal, 16)
                 Devices(hovering: $hovering, selected: $camManager.device, devices: $camManager.devices)
             }
             
             PopoverDivider()
             
             Section{
-                Text("Microphone")
-                    .foregroundColor(.secondary)
-                    .font(.callout)
-                    .fontWeight(.medium)
-                    .padding(.horizontal, 16)
+                HStack {
+                    Text("Microphone")
+                        .foregroundColor(.secondary)
+                        .font(.callout)
+                        .fontWeight(.medium)
+                    Spacer()
+                    if !micManager.isGranted {
+                        Button(action: {
+                            micManager.checkAuthorization()
+                        }, label: {
+                            Text("Request Access")
+                                .foregroundColor(.secondary)
+                                .font(.callout)
+                                .fontWeight(.medium)
+                        }).buttonStyle(PlainButtonStyle())
+                    }
+                }.padding(.horizontal, 16)
                 Devices(hovering: $hovering, selected: $micManager.device, devices: $micManager.devices)
             }
                 

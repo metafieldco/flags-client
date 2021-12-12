@@ -12,6 +12,12 @@ import UserNotifications
 
 class MicManager: ObservableObject {
     
+    weak private var delegate: AppDelegate?
+    
+    init(_ delegate: AppDelegate){
+        self.delegate = delegate
+    }
+    
     @Published var device: CaptureDevice = noMicrophone {
         didSet {
             if case .device(_) = device{
@@ -50,10 +56,9 @@ class MicManager: ObservableObject {
 
             case .notDetermined: // The user has not yet been asked for camera access.
                 AVCaptureDevice.requestAccess(for: .audio) { [weak self] granted in
-                    if granted {
-                        DispatchQueue.main.async {
-                            self?.isGranted = granted
-                        }
+                    DispatchQueue.main.async {
+                        self?.isGranted = granted
+                        self?.delegate?.showPopover()
                     }
                 }
 

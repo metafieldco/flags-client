@@ -29,7 +29,6 @@
 		2147C325274309BA00293757 /* SupabaseSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2147C324274309BA00293757 /* SupabaseSession.swift */; };
 		2147C3272743148900293757 /* RefreshRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2147C3262743148900293757 /* RefreshRequest.swift */; };
 		2147C32C2743191500293757 /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2147C32B2743191500293757 /* NetworkRequest.swift */; };
-		2151F987274512B0006B9227 /* ControlMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2151F986274512B0006B9227 /* ControlMenu.swift */; };
 		2151F989274520A8006B9227 /* PopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2151F988274520A8006B9227 /* PopoverView.swift */; };
 		217E70AB2731CF9500F30088 /* Capture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AA2731CF9500F30088 /* Capture.swift */; };
 		217E70AD2731CF9E00F30088 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E70AC2731CF9E00F30088 /* Upload.swift */; };
@@ -81,7 +80,6 @@
 		2147C324274309BA00293757 /* SupabaseSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseSession.swift; sourceTree = "<group>"; };
 		2147C3262743148900293757 /* RefreshRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshRequest.swift; sourceTree = "<group>"; };
 		2147C32B2743191500293757 /* NetworkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequest.swift; sourceTree = "<group>"; };
-		2151F986274512B0006B9227 /* ControlMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlMenu.swift; sourceTree = "<group>"; };
 		2151F988274520A8006B9227 /* PopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverView.swift; sourceTree = "<group>"; };
 		217E70AA2731CF9500F30088 /* Capture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Capture.swift; sourceTree = "<group>"; };
 		217E70AC2731CF9E00F30088 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
@@ -265,14 +263,6 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		2151F9852745129E006B9227 /* Menu */ = {
-			isa = PBXGroup;
-			children = (
-				2151F986274512B0006B9227 /* ControlMenu.swift */,
-			);
-			path = Menu;
-			sourceTree = "<group>";
-		};
 		217E70A92731CF6800F30088 /* Recorder */ = {
 			isa = PBXGroup;
 			children = (
@@ -387,7 +377,6 @@
 			isa = PBXGroup;
 			children = (
 				2137DB902764B91700373BF4 /* Types */,
-				2151F9852745129E006B9227 /* Menu */,
 				2147C31F2743089C00293757 /* Managers */,
 				212EDCE3273AA90600629D49 /* Windows */,
 				217E70BF2731D10000F30088 /* Utils */,
@@ -511,7 +500,6 @@
 				212EDCD027391CE000629D49 /* CameraWindowController.swift in Sources */,
 				212654812735A1C900E1BDD4 /* VideoTableInsertRequest.swift in Sources */,
 				2147C31C2743087D00293757 /* AuthWindowController.swift in Sources */,
-				2151F987274512B0006B9227 /* ControlMenu.swift in Sources */,
 				2182FFA627353B07005AA7AA /* CameraSettingsView.swift in Sources */,
 				219C521927315BC6007B6B36 /* FlagsApp.swift in Sources */,
 				219A71E3273BFD0000C5AF2F /* VideoTableUpdateRequest.swift in Sources */,
