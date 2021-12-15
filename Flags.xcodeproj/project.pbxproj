@@ -42,7 +42,6 @@
 		2182FFA3273401FC005AA7AA /* CameraSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182FFA2273401FC005AA7AA /* CameraSize.swift */; };
 		2182FFA627353B07005AA7AA /* CameraSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182FFA527353B07005AA7AA /* CameraSettingsView.swift */; };
 		2182FFA827353E2E005AA7AA /* CameraSizeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182FFA727353E2E005AA7AA /* CameraSizeButton.swift */; };
-		218D9B752743C14300CCCCEF /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = 218D9B742743C14300CCCCEF /* JWTDecode */; };
 		218D9B792743E78200CCCCEF /* ErrorWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218D9B782743E78200CCCCEF /* ErrorWindowController.swift */; };
 		218D9B7B2743E7A400CCCCEF /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218D9B7A2743E7A400CCCCEF /* ErrorView.swift */; };
 		219A71DD273ACE3000C5AF2F /* PreviewButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A71DC273ACE3000C5AF2F /* PreviewButtonView.swift */; };
@@ -56,6 +55,7 @@
 		219C522E27316AF5007B6B36 /* CameraContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C522D27316AF5007B6B36 /* CameraContainerView.swift */; };
 		219C523127317670007B6B36 /* CamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C523027317670007B6B36 /* CamManager.swift */; };
 		219C523327319B50007B6B36 /* MicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219C523227319B50007B6B36 /* MicManager.swift */; };
+		21B18208276A1A610080DAE5 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = 21B18207276A1A610080DAE5 /* JWTDecode */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -91,7 +91,6 @@
 		217E70B72731D08D00F30088 /* Supabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supabase.swift; sourceTree = "<group>"; };
 		217E70BD2731D0D100F30088 /* ServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceError.swift; sourceTree = "<group>"; };
 		217E70C02731D11F00F30088 /* RuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeError.swift; sourceTree = "<group>"; };
-		217E70C92731EA2100F30088 /* secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.xcconfig; sourceTree = "<group>"; };
 		2182FFA2273401FC005AA7AA /* CameraSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSize.swift; sourceTree = "<group>"; };
 		2182FFA527353B07005AA7AA /* CameraSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSettingsView.swift; sourceTree = "<group>"; };
 		2182FFA727353E2E005AA7AA /* CameraSizeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSizeButton.swift; sourceTree = "<group>"; };
@@ -111,6 +110,7 @@
 		219C522D27316AF5007B6B36 /* CameraContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraContainerView.swift; sourceTree = "<group>"; };
 		219C523027317670007B6B36 /* CamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CamManager.swift; sourceTree = "<group>"; };
 		219C523227319B50007B6B36 /* MicManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicManager.swift; sourceTree = "<group>"; };
+		21B18205276A19DC0080DAE5 /* secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,7 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				218D9B752743C14300CCCCEF /* JWTDecode in Frameworks */,
+				21B18208276A1A610080DAE5 /* JWTDecode in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -397,8 +397,8 @@
 				219C521827315BC6007B6B36 /* FlagsApp.swift */,
 				219C521C27315BCB007B6B36 /* Assets.xcassets */,
 				219C522127315BCB007B6B36 /* Flags.entitlements */,
+				21B18205276A19DC0080DAE5 /* secrets.xcconfig */,
 				219C521E27315BCB007B6B36 /* Preview Content */,
-				217E70C92731EA2100F30088 /* secrets.xcconfig */,
 			);
 			path = Flags;
 			sourceTree = "<group>";
@@ -440,7 +440,7 @@
 			);
 			name = Flags;
 			packageProductDependencies = (
-				218D9B742743C14300CCCCEF /* JWTDecode */,
+				21B18207276A1A610080DAE5 /* JWTDecode */,
 			);
 			productName = AsyncRecorder;
 			productReference = 219C521527315BC6007B6B36 /* Flags.app */;
@@ -471,7 +471,7 @@
 			);
 			mainGroup = 219C520C27315BC6007B6B36;
 			packageReferences = (
-				218D9B732743C14300CCCCEF /* XCRemoteSwiftPackageReference "JWTDecode.swift" */,
+				21B18206276A1A610080DAE5 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */,
 			);
 			productRefGroup = 219C521627315BC6007B6B36 /* Products */;
 			projectDirPath = "";
@@ -553,7 +553,7 @@
 /* Begin XCBuildConfiguration section */
 		219C522227315BCB007B6B36 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 217E70C92731EA2100F30088 /* secrets.xcconfig */;
+			baseConfigurationReference = 21B18205276A19DC0080DAE5 /* secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -615,7 +615,7 @@
 		};
 		219C522327315BCB007B6B36 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 217E70C92731EA2100F30088 /* secrets.xcconfig */;
+			baseConfigurationReference = 21B18205276A19DC0080DAE5 /* secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -754,7 +754,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		218D9B732743C14300CCCCEF /* XCRemoteSwiftPackageReference "JWTDecode.swift" */ = {
+		21B18206276A1A610080DAE5 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/auth0/JWTDecode.swift.git";
 			requirement = {
@@ -765,9 +765,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		218D9B742743C14300CCCCEF /* JWTDecode */ = {
+		21B18207276A1A610080DAE5 /* JWTDecode */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 218D9B732743C14300CCCCEF /* XCRemoteSwiftPackageReference "JWTDecode.swift" */;
+			package = 21B18206276A1A610080DAE5 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */;
 			productName = JWTDecode;
 		};
 /* End XCSwiftPackageProductDependency section */

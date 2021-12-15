@@ -27,16 +27,16 @@ class RecordingManager: ObservableObject {
             case .recording:
                 self.delegate?.closePopover()
                 self.delegate?.showCountdownWindow()
-                toggleDesktop(hide: true)
+//                toggleDesktop(hide: true)
             case .error:
                 self.delegate?.closeCameraPreview()
                 self.delegate?.showErrorWindow()
-                toggleDesktop(hide: false)
+//                toggleDesktop(hide: false)
                 self.delegate?.refreshPopover()
             case let .finished(url, videoID):
                 self.delegate?.showPreviewWindow(url: url, videoID: videoID)
                 self.delegate?.closeCameraPreview()
-                toggleDesktop(hide: false)
+//                toggleDesktop(hide: false)
                 self.delegate?.refreshPopover()
             default:
                 return
